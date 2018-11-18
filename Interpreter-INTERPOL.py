@@ -122,8 +122,10 @@ class InterpolBody(object):
 
         temp_tokens = []
         temp_symb_table = []
-
+        variables = []
         all_symb_table = []
+        all_variables = []
+        errors = -1
 
         syntax_errors = 0
         grammar_errors = 0
@@ -153,11 +155,17 @@ class InterpolBody(object):
 
             # check syntax: lexical analysis
             temp_symb_table,syntax_errors = self.checkSyntax(temp_tokens)
+            all_symb_table.append(temp_symb_table)
             
             for each_token in temp_symb_table:
                 print(each_token.type,each_token.value)
              
-            grammar_errors = self.checkGrammar(temp_symb_table)
+            grammar_errors,variables = self.checkGrammar(temp_symb_table)
+            for var in variables:
+                if len(variables) != 0:
+                    all_variables.append(var)
+                    
+            print(all_variables)
             #print(syntax_errors,grammar_errors)
 
             #if syntax_errors > 0 or grammar_errors > 0:
@@ -192,7 +200,7 @@ class InterpolBody(object):
             elif block_line[i] == DST and i==0:
                 isDeclaration = True
                 startToken = 1
-                token_type = DECLARATION_INT
+                token_type = DECLARATION_STR
 
             elif block_line[i] == STORE and i==0:
                 
@@ -256,8 +264,9 @@ class InterpolBody(object):
 
         isDeclaration = 0
         isAssignment = 0
-        isOperation = 0
         isPrint = 0
+
+        hasWith, hasIn = 0,0
 
         expression_start,expression_end = 0,0
         temp_expression = []
@@ -294,6 +303,7 @@ class InterpolBody(object):
                 # should have a variable before and declaration
                 if isDeclaration == 1 and isAssignment == 0:
                     expression_end = 1
+                    hasWith = 1
                     expressions.append(temp_expression)
                     #evaluate expression
                     eval_result = self.evaluateExpression(errors,variables,temp_expression)
@@ -305,6 +315,7 @@ class InterpolBody(object):
                 # should be assignment (store) and expression before
                 if isAssignment == 1 and isDeclaration == 0:
                     expression_end = token_count
+                    hasIn = 1
                     expressions.append(temp_expression)
                     #evaluate expression
                     eval_result = self.evaluateExpression(errors,variables,temp_expression)
@@ -323,27 +334,27 @@ class InterpolBody(object):
                 #should read in an expression
                 #if expression_end != 1 and expression_start == 1:
                 if token.type == VARIABLE and declarationType == "int":
-                    variables.append([token.value,-1])
+                    variables.append([INTEGER,token.value,-1])
                 elif token.type == VARIABLE and declarationType == "string":
-                    variables.append([token.value,"-"])
+                    variables.append([STRING,token.value,"-"])
 
                 temp_expression.append(token)
             elif isAssignment == 1 and isPrint == 0 and isDeclaration == 0 and token.type != VARIABLE_ASSIGNMENT and token.type != DECLARATION_ASSIGNMENT:
                 #should read in an expression
                 #if expression_end != 1 and expression_start == 1:
-                if token.type == VARIABLE and declarationType == "int":
-                    variables.append([token.value,-1])
-                elif token.type == VARIABLE and declarationType == "string":
-                    variables.append([token.value,"-"])
-
+                print(eval_result)
+                #check in list of all variables if existing
+                if token.type == VARIABLE:
+                    variables.append([STRING,token.value,eval_result])
+                
                 temp_expression.append(token)
             elif isPrint == 1 and isDeclaration == 0 and isAssignment == 0 and token.type != DECLARATION_ASSIGNMENT and token.type != VARIABLE_ASSIGNMENT:
                 #should read in an expression
                 #if expression_end != 1 and expression_start == 1:
                 if token.type == VARIABLE and declarationType == "int":
-                    variables.append([token.value,-1])
+                    variables.append([INTEGER,token.value,-1])
                 elif token.type == VARIABLE and declarationType == "string":
-                    variables.append([token.value,"-"])
+                    variables.append([STRING,token.value,"-"])
 
                 temp_expression.append(token)
             else:
@@ -355,65 +366,72 @@ class InterpolBody(object):
         eval_result = self.evaluateExpression(errors,variables,temp_expression)
         print(eval_result)
 
-        print(expressions)
-        print(variables)
+        if isDeclaration == 1 and isPrint == 0 and isAssignment == 0 and token.type != DECLARATION_ASSIGNMENT and token.type != VARIABLE_ASSIGNMENT and hasWith == 1:
+            # works for code blocks with only 1 variable
+            variables[0][2] = eval_result
+
+        print("expressions",expressions)
+        print("variables",variables)
         
-        return errors
+        return errors, variables
 
     def evaluateExpression(self,errors,variables,expression):
-        print(expression)
+        operations = ArithmeticOperations([])
+        print("ineval",expression)
         
         while len(expression) > 3:
-            
-            print("hi")
+        
             count,start,end = 0,0,0
-            new_list = []
             
             for element in expression:
                 if element.type == OPERATION: # if operation
                     start,end = count,count+2
-                    if expression[count+1].isdigit() == True and expression[count+2].isdigit() == True:
-                        expression[count] = self.evaluateExpression(errors,variables,expression[count:count+3])
-                    new_list.append(expression[count])
-                else:
-                    new_list.append(expression[count])
-                
+                    if expression[count+1].type == INTEGER and expression[count+2].type == INTEGER:
+                        # if both integer
+                        expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
+                    
+                    elif (expression[count+1].type == VARIABLE and expression[count+2].type == INTEGER) or (expression[count+1].type == INTEGER and expression[count+2].type == VARIABLE) or (expression[count+1].type == VARIABLE and expression[count+2].type == VARIABLE):
+                        print("hi", variables)
+                        check,index = -1,0
+                        
+                        for variable in variables:
+                            if variable[1] == expression[count+1].value:
+                                check = 1
+                                expression[count+1].value = variable[2]
+                            if  variable[1] == expression[count+2].value:
+                                check = 1
+                                expression[count+2].value = variable[2]
+
+                        if check == 1:
+                            print("change", expression,expression[count:count+3])
+                            expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
                 count += 1
-                print(start,end)
             
             del expression[start+1:end+1]
-            print(expression,new_list)
-            return expression
+            print(expression)
         
         if len(expression) == 3 and expression[0].type == OPERATION:
-            sum = int(expression[1].value) + int(expression[2].value)
-            return str(sum)
+            output = -1
+            operation,val1,val2 = expression[0].value,expression[1].value,expression[2].value
+
+            if operation == PLUS:
+                output = operations.add(int(val1),int(val2))
+            elif operation == MINUS:
+                output = operations.sub(int(val1),int(val2))
+            elif operation == MULT:
+                output = operations.mul(int(val1),int(val2)) 
+            elif operation == DIV:
+                output = operations.div(int(val1),int(val2)) 
+            elif operation == MODU:
+                output = operations.mod(int(val1),int(val2)) 
+                
+            return output
         elif len(expression) == 1 and (expression[0].type == VARIABLE or expression[0].type == INTEGER or expression[0].type == STRING):
             # if variable
-            return expression
+            return expression[0].value
         else:
             errors += 1
             return errors
-
-
-    def executeOperation(self,operation,values):
-        operations = ArithmeticOperations(values)
-        output = 0
-
-        print(operation,values)
-
-        if operation == PLUS:
-            output = operations.add(int(values[0]),int(values[1]))
-        elif operation == MINUS:
-            output = operations.sub(int(values[0]),int(values[1]))
-        elif operation == MULT:
-            output = operations.mul(int(values[0]),int(values[1])) 
-        elif operation == DIV:
-            output = operations.div(int(values[0]),int(values[1])) 
-        elif operation == MODU:
-            output = operations.mod(int(values[0]),int(values[1])) 
-        
-        return output
 
 def main():
     # TEST FOR INTERPRETER. NOT ACTUAL INPUT METHOD
