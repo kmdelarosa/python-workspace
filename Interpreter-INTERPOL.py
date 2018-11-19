@@ -21,7 +21,7 @@ class InputOutput(object):
 
     def inputFromUser(self):
         # Asking input from the user:  GIVEME? <variable_name>
-        return input("GIVEME? ")    
+        return input("Input source file: ")    
 
     def printOutput(self,tag,output_block):
         if tag == 1:
@@ -49,8 +49,12 @@ class InputOutput(object):
 
     def checkIpolFile(self,ipol_file):
     # verifies if .ipol file is valid
-        
+        import os.path
+
         if(len(ipol_file.split(".")) <= 1 or ipol_file.split(".")[1] != "ipol"):
+            return "INVALID SOURCE FILE!"
+        #check if file exists
+        elif os.path.exists(ipol_file) != True:
             return "INVALID SOURCE FILE!"
         else:
             return ipol_file
@@ -135,44 +139,52 @@ class InterpolBody(object):
             # split code line by spaces
             temp_tokens = self.code_block[i].replace('\t','').split(' ')
 
-            strng_index = -1
-
-            for i in range(len(temp_tokens)):
-                if temp_tokens[i].find("[") != -1:
-                    strng_index = i
-                    for strng in temp_tokens[i+1:]:
-                        if strng.find("[") != -1:
-                            print("INVALID SYNTAX ERROR!")
-                            break
-                        else:
-                            temp_tokens[i] = temp_tokens[i] + " " + strng
-                            if(strng.find("]") != -1):
-                                break
-                i+=1
-
-            if strng_index != -1:
-                del temp_tokens[strng_index+1:]
-
-            # check syntax: lexical analysis
-            temp_symb_table,syntax_errors = self.checkSyntax(temp_tokens)
-            all_symb_table.append(temp_symb_table)
+            if temp_tokens == "CREATE":
+                    errors += 1
+                    print("SYNTAX ERROR!")
+                    break
             
-            for each_token in temp_symb_table:
-                print(each_token.type,each_token.value)
-             
-            grammar_errors,variables = self.checkGrammar(temp_symb_table)
-            for var in variables:
-                if len(variables) != 0:
-                    all_variables.append(var)
-                    
-            print(all_variables)
-            #print(syntax_errors,grammar_errors)
+            elif temp_tokens == "RUPTURE":
+                break
+            
+            else:
+                strng_index = -1
 
-            #if syntax_errors > 0 or grammar_errors > 0:
-            #    print("SYNTAX ERROR!")
-            #    break
-            #else:
-            #    i+=1
+                for i in range(len(temp_tokens)):
+
+                    if temp_tokens[i].find("[") != -1:
+                        strng_index = i
+                        
+                        for strng in temp_tokens[i+1:]:
+                            if strng.find("[") != -1:
+                                print("INVALID SYNTAX ERROR!")
+                                break
+                            else:
+                                temp_tokens[i] = temp_tokens[i] + " " + strng
+                                if(strng.find("]") != -1):
+                                    break
+                    i+=1
+
+                if strng_index != -1:
+                    del temp_tokens[strng_index+1:]
+
+                # check syntax: lexical analysis
+                
+                print(temp_tokens)
+
+                temp_symb_table,syntax_errors = self.checkSyntax(temp_tokens)
+                all_symb_table.append(temp_symb_table)
+                    
+                for each_token in temp_symb_table:
+                    print(each_token.type,each_token.value)
+                    
+                grammar_errors,variables = self.checkGrammar(temp_symb_table,all_variables)
+                
+                #for var in variables:
+                    #if len(variables) != 0:
+                    #    all_variables.append(var)
+                            
+                #print("all_variables",all_variables)
     
     def checkSyntax(self,block_line):
 
@@ -256,11 +268,13 @@ class InterpolBody(object):
         return symbol_table,errors
 
 
-    def checkGrammar(self,block_line):
+    def checkGrammar(self,block_line,all_variables):
 
         # check grammar of code block
         # code block is broken down into symbol table
         # check if arrangement of tokens are valid
+
+        print("incheck",all_variables)
 
         isDeclaration = 0
         isAssignment = 0
@@ -284,17 +298,17 @@ class InterpolBody(object):
 
         for token in block_line:
 
-            print(token)
-
             # for each token in a line
             if token.type == DECLARATION_INT and token_count == 0:
                 isDeclaration = 1
                 expression_start = 1
                 declarationType = "int"
+            
             elif token.type == DECLARATION_STR and token_count == 0:
                 isDeclaration = 1
                 expression_start = 1
                 declarationType = "string"
+            
             elif token.type == ASSIGNMENT and token_count == 0:
                 isAssignment = 1
             
@@ -306,8 +320,7 @@ class InterpolBody(object):
                     hasWith = 1
                     expressions.append(temp_expression)
                     #evaluate expression
-                    eval_result = self.evaluateExpression(errors,variables,temp_expression)
-                    print(eval_result)
+                    eval_result = self.evaluateExpression(errors,all_variables,temp_expression)
                     temp_expression =[]
 
             elif token.type == VARIABLE_ASSIGNMENT:
@@ -318,8 +331,7 @@ class InterpolBody(object):
                     hasIn = 1
                     expressions.append(temp_expression)
                     #evaluate expression
-                    eval_result = self.evaluateExpression(errors,variables,temp_expression)
-                    print(eval_result)
+                    eval_result = self.evaluateExpression(errors,all_variables,temp_expression)
                     temp_expression =[]
 
             elif token.type == PRINT and token_count == 0:
@@ -333,47 +345,69 @@ class InterpolBody(object):
             elif isDeclaration == 1 and isPrint == 0 and isAssignment == 0 and token.type != DECLARATION_ASSIGNMENT and token.type != VARIABLE_ASSIGNMENT:
                 #should read in an expression
                 #if expression_end != 1 and expression_start == 1:
-                if token.type == VARIABLE and declarationType == "int":
+                if token.type == VARIABLE and declarationType == "int" and self.checkAllVariables(token,all_variables) == False :
                     variables.append([INTEGER,token.value,-1])
-                elif token.type == VARIABLE and declarationType == "string":
+                    all_variables.append([INTEGER,token.value,-1])
+                elif token.type == VARIABLE and declarationType == "string" and self.checkAllVariables(token,all_variables) == False:
                     variables.append([STRING,token.value,"-"])
+                    all_variables.append([STRING,token.value,"-"])
 
                 temp_expression.append(token)
             elif isAssignment == 1 and isPrint == 0 and isDeclaration == 0 and token.type != VARIABLE_ASSIGNMENT and token.type != DECLARATION_ASSIGNMENT:
                 #should read in an expression
                 #if expression_end != 1 and expression_start == 1:
-                print(eval_result)
                 #check in list of all variables if existing
-                if token.type == VARIABLE:
+                if token.type == VARIABLE and self.checkAllVariables(token,all_variables) == False:
+                    print("somewhere")    
                     variables.append([STRING,token.value,eval_result])
-                
+                    #all_variables.append([STRING,token.value,eval_result])
+                    # assigns eval result variable with -1 value (default value for integer) 
+                    count = 0
+                    for var in all_variables:
+                        if var[1] == token.value and var[2] == -1:
+                            all_variables[count][2] = eval_result
+                        count += 1
+                            
                 temp_expression.append(token)
+            
             elif isPrint == 1 and isDeclaration == 0 and isAssignment == 0 and token.type != DECLARATION_ASSIGNMENT and token.type != VARIABLE_ASSIGNMENT:
                 #should read in an expression
                 #if expression_end != 1 and expression_start == 1:
-                if token.type == VARIABLE and declarationType == "int":
+                if token.type == VARIABLE and declarationType == "int" and self.checkAllVariables(token,all_variables) == False:
                     variables.append([INTEGER,token.value,-1])
-                elif token.type == VARIABLE and declarationType == "string":
+                    all_variables.append([INTEGER,token.value,-1])
+                elif token.type == VARIABLE and declarationType == "string" and self.checkAllVariables(token,all_variables) == False:
                     variables.append([STRING,token.value,"-"])
+                    all_variables.append([STRING,token.value,"-"])
 
                 temp_expression.append(token)
             else:
                 errors += 1
 
-            print(token_count,errors,token)
             token_count += 1
         expressions.append(temp_expression)
-        eval_result = self.evaluateExpression(errors,variables,temp_expression)
+        eval_result = self.evaluateExpression(errors,all_variables,temp_expression)
         print(eval_result)
+
+        print(all_variables, token_count)
 
         if isDeclaration == 1 and isPrint == 0 and isAssignment == 0 and token.type != DECLARATION_ASSIGNMENT and token.type != VARIABLE_ASSIGNMENT and hasWith == 1:
             # works for code blocks with only 1 variable
+            count = 0
             variables[0][2] = eval_result
+            all_variables[len(all_variables)-1][2] = eval_result
 
         print("expressions",expressions)
         print("variables",variables)
+        print("all_variables",all_variables)
         
         return errors, variables
+    
+    def checkAllVariables(self,variable,variables):
+        for var in variables:
+            if var[1] == variable.value and var[0] == variable.type:
+                return True
+        return False
 
     def evaluateExpression(self,errors,variables,expression):
         operations = ArithmeticOperations([])
@@ -395,13 +429,14 @@ class InterpolBody(object):
                         check,index = -1,0
                         
                         for variable in variables:
+                            print(variable)
                             if variable[1] == expression[count+1].value:
                                 check = 1
                                 expression[count+1].value = variable[2]
                             if  variable[1] == expression[count+2].value:
                                 check = 1
                                 expression[count+2].value = variable[2]
-
+                        print(expression[count:count+3])
                         if check == 1:
                             print("change", expression,expression[count:count+3])
                             expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
@@ -434,7 +469,6 @@ class InterpolBody(object):
             return errors
 
 def main():
-    # TEST FOR INTERPRETER. NOT ACTUAL INPUT METHOD
     block_end = False
     block_start = False
     code_block = []
@@ -446,6 +480,7 @@ def main():
     check_source = testIO.checkIpolFile(test_source)
 
     source_code = []
+    errors = 0
 
     print(check_source)
         
@@ -455,19 +490,27 @@ def main():
         print(source_code)
 
     for statement in source_code:
-        if statement == "CREATE":
+        if statement == "CREATE" and block_start != True:
             # start reading in cobe block
             block_start = True
-
-        elif statement == "RUPTURE":
-            block_end = True
+        elif statement == "RUPTURE" and block_start == True:
+            if block_end != True: # first instance of rupture
+                block_end = True
+                #code_block.append(statement)
+                break
+            elif block_start == True: # has existing rupture
+                errors += 1
+        elif statement == "CREATE" and block_start == True:
+            errors += 1
             break
-        
-        elif block_start == True:
+        elif block_start == True and block_end != True:
             code_block.append(statement)
             
     # process code block
-    code_block = InterpolBody(code_block,False,False)
-    code_block.processBlock()
+    if errors == 0:
+        code_block = InterpolBody(code_block,False,False)
+        code_block.processBlock()
+    else:
+        print("SYNTAX ERROR!")
 
 main()
