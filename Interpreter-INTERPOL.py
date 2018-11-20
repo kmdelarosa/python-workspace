@@ -425,6 +425,28 @@ class InterpolBody(object):
             if var[1] == variable.value:
                 return var[2]
         return variable.value
+    
+    def checkSucceedingElements(self,expression,count,variables):
+        index = 0
+        variable_flag = 0
+        variables = []
+
+        for element in expression:
+            if element.type == VARIABLE:
+                variable_flag += 1
+                variables.append([index,element])
+            index += 1
+        
+        if variable_flag == 0:
+            # if all succeeding elements are integers
+            return 0
+                    
+        else:
+            # if there are any non-integer (variable)
+            for elem in variables:
+                if self.checkAllVariables(elem[1].value,variables) == True:
+                    expression[elem[0]].value = self.retrieveFromVariables(expression[elem[0]].value,variables)
+
 
     def evaluateExpression(self,errors,variables,expression):
         operations = ArithmeticOperations([])
