@@ -1,6 +1,7 @@
 DINT,DST,STORE,PRINT,PRINTN,INPUTN,USERINPUT,OUTPUT = "DINT","DSTR","STORE","GIVEYOU!","GIVEYOU!!","GIVEME?","USER_INPUT","OUTPUT"
 DECLARATION_INT,DECLARATION_STR = "DECLARATION_INTEGER","DECLARATION_STRING"
 PLUS,MINUS,MULT,DIV,MODU = "PLUS","MINUS","MULT","DIV","MODU"
+EXPO,ROOT,MEAN,DISTANCE = "RAISE","ROOT","MEAN","DIST"
 OPERATION,VARIABLE,INTEGER,STRING,IDENTIFIER,EXPRESSION = "OPERATION","VARIABLE","INTEGER","STRING","IDENTIFIER","EXPRESSION"
 ASSIGNMENT,DEC_ASSIGNMENT,VAR_ASSIGNMENT,DECLARATION_ASSIGNMENT, VARIABLE_ASSIGNMENT = "ASSIGNMENT","WITH","IN","DECLARATION_ASSIGNMENT","VARIABLE_ASSIGNMENT"
 
@@ -99,12 +100,19 @@ class AdvancedArithmetic(ArithmeticOperations):
 
     def nthRoot(self,N,expr):
         # Nth Root of a No. : ROOT <N> <expression>
+        # add formula here
         return expr
 
     def avg(self,values):
         # Average: MEAN <expr1> <expr2> <expr3> … <exprn>
         #  This is the only operation that accepts an unlimited number of parameters.
-        return values
+        sum = 0
+        for value in values:
+            sum += value
+        
+        avg = sum/len(values)
+        
+        return avg 
 
     def distance(self,pt1,pt2):
         # Distance between two points: DIST <expr1> <expr2> AND <expr3> <expr4>
@@ -190,11 +198,17 @@ class InterpolBody(object):
                 print("errors",grammar_errors)
                 if grammar_errors > 0:
                     break
-                    
-        print("SYMBOL TABLE")    
+
+        print("LEXEMES AND TOKENS TABLE") 
+        line_count = 0   
         for each_token_set in all_symb_table:
             for each_token in each_token_set:
-                print(each_token.type,each_token.value,sep = "\t\t")
+                print("["+str(line_count)+"]",each_token.type,each_token.value,sep = "\t\t")
+            line_count += 1
+        
+        print("SYMBOL TABLE")
+        for variable in all_variables:
+            print(variable[1],variable[0],variable[2],sep="\t")
 
     def checkSyntax(self,block_line):
 
@@ -414,13 +428,14 @@ class InterpolBody(object):
 
     def evaluateExpression(self,errors,variables,expression):
         operations = ArithmeticOperations([])
+        adv_operations = AdvancedArithmetic()
         
         while len(expression) > 3:
         
             count,start,end = 0,0,0
             
             for element in expression:
-                if element.type == OPERATION: # if operation
+                if element.type == OPERATION: # if operation is for 2 digit operation
                     start,end = count,count+2
                     if expression[count+1].type == INTEGER and expression[count+2].type == INTEGER:
                         # if both integer
@@ -437,16 +452,15 @@ class InterpolBody(object):
                             check = 1
                             expression[count+2].value = self.retrieveFromVariables(expression[count+2],variables)
                         
-                        #for variable in variables:
-                        #    if variable[1] == expression[count+1].value:
-                        #        check = 1
-                        #        expression[count+1].value = variable[2]
-                        #    if  variable[1] == expression[count+2].value:
-                        #        check = 1
-                        #        expression[count+2].value = variable[2]
-                        
                         if check == 1:
                             expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
+                
+                elif element.type == OPERATION and element.value == MEAN:
+                    print("calculate for mean of all integer/variable/expression following")
+                
+                elif element.type == OPERATION and element.value == DISTANCE:
+                    print("calculate for distance of all integer/variable/expression following")
+                    
                 count += 1
             
             del expression[start+1:end+1]
@@ -465,7 +479,11 @@ class InterpolBody(object):
                 output = operations.div(int(val1),int(val2)) 
             elif operation == MODU:
                 output = operations.mod(int(val1),int(val2)) 
-                
+            elif operation == EXPO:
+                output = adv_operations.exp(int(val1),int(val2))
+            elif operation == ROOT:
+                output = adv_operations.nthRoot(int(val1),int(val2))
+            
             return output
         elif len(expression) == 1 and (expression[0].type == VARIABLE or expression[0].type == INTEGER or expression[0].type == STRING):
             # if variable
