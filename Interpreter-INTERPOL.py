@@ -532,12 +532,13 @@ class InterpolBody(object):
                         expression[count+2] = self.checkExpression(expression[count+2],variables)
                         
                         expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
-                
+
                 elif element.type == OPERATION and element.value == MEAN:
                     print("calculate for mean of all integer/variable/expression following")
 
                     start,end = count,len(expression)
                     mn_values = []
+                    mn_values_index = []
                     result,ctr = 0,start
 
                     for elem in expression[start+1:end+1]:
@@ -552,17 +553,14 @@ class InterpolBody(object):
             
                             if result == PLUS or result == MINUS or result == MULT or result == DIV or result == MODU or result == EXPO or result == ROOT or result == MEAN or result == DISTANCE:
                                 tmp = str(self.evaluateExpression(errors,variables,expression[ctr+1:end+1]))
-
+                                #mn_values_index.append(ctr)
                             elif result.isdigit() == True:
                                 tmp = result
                             
-                            mn_values.append(int(tmp))
+                            mn_values.append(tmp)
                         ctr += 1
 
-                    print("mn",mn_values)
-
-                    expression[count].value = str(adv_operations.avg(mn_values))
-                    expression[count].type = INTEGER
+                    print("mn",mn_values, expression)
 
                 elif element.type == OPERATION and element.value == DISTANCE:
                     print("calculate for distance of all integer/variable/expression following")
@@ -598,7 +596,7 @@ class InterpolBody(object):
             elif operation == ROOT:
                 output = adv_operations.nthRoot(int(val1),int(val2))
             elif operation == MEAN:
-                ouput  = adv_operations.avg([int(val1),int(val2)])
+                output  = adv_operations.avg([int(val1),int(val2)])
             
             return output
 
