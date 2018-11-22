@@ -1,6 +1,8 @@
 CREATE
+DSTR strng WITH [Hello to the World]
 DINT z	
-STORE MODU 10 3 IN z	
+STORE MODU PLUS 1 10 3 IN z	
 GIVEYOU!! z	
-GIVEYOU! y
+GIVEYOU! 100
+GIVEYOU!! strng
 RUPTURE

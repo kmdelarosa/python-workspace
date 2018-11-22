@@ -85,11 +85,11 @@ class ArithmeticOperations(object):
     
     def div(self,val1,val2):
         # Division: DIVBY <expression1> <expression2>
-        return val1/val2
+        return int(val1/val2)
     
     def mod(self,val1,val2):
         # Modulo: MODU <expression1> <expression2>
-        return val1%val2
+        return int(val1%val2)
 
 class AdvancedArithmetic(ArithmeticOperations):
     def __init__(self):
@@ -102,7 +102,8 @@ class AdvancedArithmetic(ArithmeticOperations):
     def nthRoot(self,N,expr):
         # Nth Root of a No. : ROOT <N> <expression>
         # add formula here
-        return expr
+        nroot = expr**(1/(N))
+        return int(nroot)
 
     def avg(self,values):
         # Average: MEAN <expr1> <expr2> <expr3> … <exprn>
@@ -113,7 +114,7 @@ class AdvancedArithmetic(ArithmeticOperations):
         
         avg = sum/len(values)
         
-        return avg 
+        return int(avg) 
 
     def distance(self,pt1,pt2):
         # Distance between two points: DIST <expr1> <expr2> AND <expr3> <expr4>
@@ -188,12 +189,39 @@ class InterpolBody(object):
                     
                 grammar_errors = self.checkGrammar(temp_symb_table,all_variables)
 
-                if len(temp_symb_table) == 2 and (temp_symb_table[0].type == OUTPUT or temp_symb_table[0].type == PRINTN):
-                    if self.checkAllVariables(temp_symb_table[1],all_variables) == False and temp_symb_table[0].value == PRINT:
-                        input_output.printOutput(1, self.retrieveFromVariables(temp_symb_table[1],all_variables))
-                    elif self.checkAllVariables(temp_symb_table[1],all_variables) == False and temp_symb_table[0].value == PRINTN:
-                        input_output.printOutput(2, self.retrieveFromVariables(temp_symb_table[1],all_variables))
+                if temp_symb_table[0].type == OUTPUT and temp_symb_table[0].value == PRINT and grammar_errors == 0:
+                    if  temp_symb_table[1].type == INTEGER or temp_symb_table[1].type == STRING:
+                        # if literal (integer or string)
+                        input_output.printOutput(1,temp_symb_table[1].value)
+                    
+                    elif temp_symb_table[1].type == VARIABLE:
+                        # if variable
+                        for var in all_variables:
+                            if var[1] == temp_symb_table[1].value:
+                                input_output.printOutput(1,temp_symb_table[1].value)
+
+                    else:
+                        # if expression
+                        eval_res = self.evaluateExpression(errors,all_variables,temp_symb_table)
+                        print(eval_res)
                 
+                elif temp_symb_table[0].type == OUTPUT and temp_symb_table[0].value == PRINTN and grammar_errors == 0:
+                    if  temp_symb_table[1].type == INTEGER or temp_symb_table[1].type == STRING:
+                        # if literal (integer or string)
+                        input_output.printOutput(2,temp_symb_table[1].value)
+                    
+                    elif temp_symb_table[1].type == VARIABLE:
+                        # if variable
+                        for var in all_variables:
+                            if var[1] == temp_symb_table[1].value:
+                                input_output.printOutput(2,var[2])
+
+                    else:
+                        # if expression
+                        eval_res = self.evaluateExpression(errors,all_variables,temp_symb_table)
+                        print(eval_res)
+
+                                    
                 print("errors",grammar_errors)
                 if grammar_errors > 0:
                     break
@@ -335,7 +363,7 @@ class InterpolBody(object):
 
         for token in block_line:
 
-            print(block_line)
+            print(token)
 
             # for each token in a line
             if token.type == DECLARATION_INT and token_count == 0:
@@ -366,8 +394,6 @@ class InterpolBody(object):
                     print(eval_result)
 
             elif token.type == VARIABLE_ASSIGNMENT:
-                # check if "IN"
-                # should be assignment (store) and expression before
                 if isAssignment == 1 and isDeclaration == 0:
 
                     expression_end = token_count
@@ -395,8 +421,7 @@ class InterpolBody(object):
                 all_variables.append([STRING,token.value,"-"])
             
             elif isDeclaration == 1 and isPrint == 0 and isAssignment == 0 and token.type != DECLARATION_ASSIGNMENT and token.type != VARIABLE_ASSIGNMENT:
-                #should read in an expression
-                #if expression_end != 1 and expression_start == 1:
+                
                 if token.type == VARIABLE and declarationType == "int" and self.checkAllVariables(token,all_variables) == False :
                     all_variables.append([INTEGER,token.value,-1])
                 elif token.type == VARIABLE and declarationType == "string" and self.checkAllVariables(token,all_variables) == False:
@@ -404,11 +429,8 @@ class InterpolBody(object):
 
                 temp_expression.append(token)
             elif (isAssignment == 1 and isPrint == 0 and isDeclaration == 0 and token.type != VARIABLE_ASSIGNMENT and token.type != DECLARATION_ASSIGNMENT) or (isVarInput == 1 and isDeclaration == 0 and isAssignment == 0 and token.type != VARIABLE_ASSIGNMENT and token.type != DECLARATION_ASSIGNMENT):
-                #should read in an expression
-                #if expression_end != 1 and expression_start == 1:
-                #check in list of all variables if existing
+                print("help")
                 if token.type == VARIABLE and self.checkAllVariables(token,all_variables) == False:
-                    # assigns eval result variable with -1 value (default value for integer) 
                     count = 0
                     for var in all_variables:
                         if var[1] == token.value and var[2] == -1:
@@ -419,23 +441,35 @@ class InterpolBody(object):
             
             elif isPrint == 1 and isDeclaration == 0 and isAssignment == 0 and token.type != DECLARATION_ASSIGNMENT and token.type != VARIABLE_ASSIGNMENT:
                 #should read in an expression
-                if self.checkAllVariables(token,all_variables) == False and self.retrieveFromVariables(token,all_variables) == token.value:
-                    print(token)    
-                    #errors+=1
 
+                if token.type == VARIABLE:
+                    flag = 0
+                    for var in all_variables:
+                        if var[1] == token.value:
+                            flag = 1
+                    #if variable to be printed is not variable list   
+                    if flag == 0: 
+                        errors += 1
+                print(errors)
+            
                 temp_expression.append(token)
+
             else:
                 errors += 1
 
             token_count += 1
         
-        if token.type != PROGRAM_CREATE and token.type != PROGRAM_RUPTURE:
+        if len(block_line) > 2 and (isDeclaration == 1 and hasWith == 0) or (isDeclaration == 0 and hasWith == 1):
+            errors += 1
+        if len(block_line) > 2 and (isAssignment == 1 and hasIn == 0) or (isAssignment == 0 and hasIn == 1):
+            errors += 1
+        
+        if token.type != PROGRAM_CREATE and token.type != PROGRAM_RUPTURE and isDeclaration==1 and hasWith ==1:
             expressions.append(temp_expression)
 
             eval_result = self.evaluateExpression(errors,all_variables,temp_expression)
-            print("eval",eval_result)
-
-            if eval_result != ERROR and isDeclaration == 1 and isPrint == 0 and isAssignment == 0 and token.type != DECLARATION_ASSIGNMENT and token.type != VARIABLE_ASSIGNMENT and hasWith == 1:
+            
+            if eval_result != ERROR and (isDeclaration == 1 or isPrint == 1) and isAssignment == 0 and token.type != DECLARATION_ASSIGNMENT and token.type != VARIABLE_ASSIGNMENT and hasWith == 1:
                 # works for code blocks with only 1 variable
                 all_variables[len(all_variables)-1][2] = eval_result
 
@@ -443,10 +477,13 @@ class InterpolBody(object):
         
         if eval_result == ERROR:
             errors += 1
+        
+        print(errors)
 
         return errors
     
     def checkAllVariables(self,variable,variables):
+
         for var in variables:
             if var[1] == variable.value and var[0] == variable.type:
                 return True
@@ -458,30 +495,18 @@ class InterpolBody(object):
                 return var[2]
         return variable.value
     
-    def checkSucceedingElements(self,expression,count,variables):
-        index = 0
-        variable_flag = 0
-        variables = []
+    def checkExpression(self,expression,variables):
 
-        for element in expression:
-            if element.type == VARIABLE:
-                variable_flag += 1
-                variables.append([index,element])
-            index += 1
-        
-        if variable_flag == 0:
-            # if all succeeding elements are integers
-            return expression
-                    
+        # check for variables and return values
+        # return updated expression
+        if expression[0].type == VARIABLE and self.checkAllVariables(expression[0],variables) == True:
+            temp_var = 0
+            temp_var = self.retrieveFromVariables(expression,variables)
+            return temp_var
+            
         else:
-            # if there are any non-integer (variable)
-            for elem in variables:
-                if self.checkAllVariables(elem[1].value,variables) == True:
-                    expression[elem[0]].value = self.retrieveFromVariables(expression[elem[0]].value,variables)
-
-            return expression
-
-
+            return expression[0].value        
+    
     def evaluateExpression(self,errors,variables,expression):
         operations = ArithmeticOperations([])
         adv_operations = AdvancedArithmetic()
@@ -493,34 +518,52 @@ class InterpolBody(object):
             count,start,end = 0,0,0
             
             for element in expression:
+
                 if element.type == OPERATION and element.value != MEAN and element.value != DISTANCE: # if operation is for 2 digit operation
                     start,end = count,count+2
-
+                    
                     if expression[count+1].type == INTEGER and expression[count+2].type == INTEGER:
                         # if both integer
                         expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
                     
                     elif (expression[count+1].type == VARIABLE and expression[count+2].type == INTEGER) or (expression[count+1].type == INTEGER and expression[count+2].type == VARIABLE) or (expression[count+1].type == VARIABLE and expression[count+2].type == VARIABLE):
-                        check,index = -1,0
+                        expression[count+1] = self.checkExpression(expression[count+1],variables)
+                        expression[count+2] = self.checkExpression(expression[count+2],variables)
+                        expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
+                
+                #if element.type == OPERATION and element.value != MEAN and element.value != DISTANCE: # if operation is for 2 digit operation
+                #    start,end = count,count+2
 
-                        if self.checkAllVariables(expression[count+1],variables) == True:
-                            check = 1
-                            expression[count+1].value = self.retrieveFromVariables(expression[count+1],variables)
+                #    if expression[count+1].type == INTEGER and expression[count+2].type == INTEGER:
+                        # if both integer
+                #        expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
+                    
+                #    elif (expression[count+1].type == VARIABLE and expression[count+2].type == INTEGER) or (expression[count+1].type == INTEGER and expression[count+2].type == VARIABLE) or (expression[count+1].type == VARIABLE and expression[count+2].type == VARIABLE):
+                #        check,index = -1,0
+
+                #        if self.checkAllVariables(expression[count+1],variables) == True:
+                #            check = 1
+                #            expression[count+1].value = self.retrieveFromVariables(expression[count+1],variables)
                         
-                        if self.checkAllVariables(expression[count+2],variables) == True:
-                            check = 1
-                            expression[count+2].value = self.retrieveFromVariables(expression[count+2],variables)
+                #        if self.checkAllVariables(expression[count+2],variables) == True:
+                #            check = 1
+                #            expression[count+2].value = self.retrieveFromVariables(expression[count+2],variables)
                         
-                        if check == 1:
-                            expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
+                #        if check == 1:
+                #            expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
 
 
                 elif element.type == OPERATION and element.value == MEAN:
                     print("calculate for mean of all integer/variable/expression following")
+                    
                 
                 elif element.type == OPERATION and element.value == DISTANCE:
                     print("calculate for distance of all integer/variable/expression following")
-                
+                    
+                    #dst_values = []
+
+                    #for elem in expression[count+1:]
+                        #if()
                 else:
                     errors += 1
 
@@ -551,10 +594,15 @@ class InterpolBody(object):
 
         elif len(expression) == 1 and (expression[0].type == VARIABLE or expression[0].type == INTEGER or expression[0].type == STRING):
             # if variable
-            if expression[0].type == STRING:
-                return expression[0].value[1:len(expression[0].value)-1]
-            else:  
-                return expression[0].value
+
+            exp_check = self.checkExpression(expression,variables)
+
+            if exp_check == "error":
+                errors += 1
+            elif expression[0].type == STRING:
+                return exp_check[1:len(exp_check)-1]
+            else:
+                return exp_check
        
         else:
             errors += 1
