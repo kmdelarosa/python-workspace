@@ -1,9 +1,10 @@
 DINT,DST,STORE,PRINT,PRINTN,INPUTN,USERINPUT,OUTPUT = "DINT","DSTR","STORE","GIVEYOU!","GIVEYOU!!","GIVEME?","USER_INPUT","OUTPUT"
-DECLARATION_INT,DECLARATION_STR = "DECLARATION_INTEGER","DECLARATION_STRING"
-PLUS,MINUS,MULT,DIV,MODU = "PLUS","MINUS","MULT","DIV","MODU"
+DECLARATION_INT,DECLARATION_STR,PROGRAM_CREATE,PROGRAM_RUPTURE,CREATE,RUPTURE = "DECLARATION_INTEGER","DECLARATION_STRING","PROGRAM_CREATE","PROGRAM_RUPTURE","CREATE","RUPTURE"
+PLUS,MINUS,MULT,DIV,MODU = "PLUS","MINUS","TIMES","DIVBY","MODU"
 EXPO,ROOT,MEAN,DISTANCE = "RAISE","ROOT","MEAN","DIST"
 OPERATION,VARIABLE,INTEGER,STRING,IDENTIFIER,EXPRESSION = "OPERATION","VARIABLE","INTEGER","STRING","IDENTIFIER","EXPRESSION"
 ASSIGNMENT,DEC_ASSIGNMENT,VAR_ASSIGNMENT,DECLARATION_ASSIGNMENT, VARIABLE_ASSIGNMENT = "ASSIGNMENT","WITH","IN","DECLARATION_ASSIGNMENT","VARIABLE_ASSIGNMENT"
+ERROR = "ERROR"
 
 class Token(object):
     def __init__(self,type,value):
@@ -182,8 +183,6 @@ class InterpolBody(object):
 
                 # check syntax: lexical analysis
                 
-                print(temp_tokens)
-
                 temp_symb_table,syntax_errors = self.checkSyntax(temp_tokens)
                 all_symb_table.append(temp_symb_table)
                     
@@ -199,16 +198,21 @@ class InterpolBody(object):
                 if grammar_errors > 0:
                     break
 
-        print("LEXEMES AND TOKENS TABLE") 
-        line_count = 0   
-        for each_token_set in all_symb_table:
-            for each_token in each_token_set:
-                print("["+str(line_count)+"]",each_token.type,each_token.value,sep = "\t\t")
-            line_count += 1
-        
-        print("SYMBOL TABLE")
-        for variable in all_variables:
-            print(variable[1],variable[0],variable[2],sep="\t")
+        if grammar_errors == 0:
+            print("{:=^70}".format(" LEXEMES AND TOKENS TABLE ")) 
+            print("{:<10} {:30} {:10}".format("Line #","Token","Lexeme")) 
+            line_count = 0   
+            for each_token_set in all_symb_table:
+                for each_token in each_token_set:
+                    print("{:<10} {:30} {:10}".format("["+str(line_count+1)+"]",each_token.type,each_token.value))
+                line_count += 1
+            
+            print("{:=^70}".format(" SYMBOL TABLE "))
+            print("{:<20} {:30} {:10}".format("Variable Name","Type","Value")) 
+            for variable in all_variables:
+                print("{:<20} {:30} {:<10}".format(variable[1],variable[0],variable[2]))
+        else:
+            print("SYNTAX ERROR!")
 
     def checkSyntax(self,block_line):
 
@@ -244,6 +248,12 @@ class InterpolBody(object):
                 startToken = 1
                 token_type = ASSIGNMENT
                 #self.syntax_status = True  
+            
+            elif block_line[i] == CREATE:
+                token_type = PROGRAM_CREATE
+            
+            elif block_line[i] == RUPTURE:
+                token_type = PROGRAM_RUPTURE
                
             elif isinstance(block_line[i],int):
                 
@@ -305,6 +315,7 @@ class InterpolBody(object):
         isAssignment = 0
         isVarInput = 0
         isPrint = 0
+        isCreate, isRupture = 0,0
 
         hasWith, hasIn = 0,0
 
@@ -324,6 +335,8 @@ class InterpolBody(object):
 
         for token in block_line:
 
+            print(block_line)
+
             # for each token in a line
             if token.type == DECLARATION_INT and token_count == 0:
                 isDeclaration = 1
@@ -342,23 +355,34 @@ class InterpolBody(object):
                 # check if "WITH" and count == 2
                 # should have a variable before and declaration
                 if isDeclaration == 1 and isAssignment == 0:
+                    
+                    
                     expression_end = 1
                     hasWith = 1
                     expressions.append(temp_expression)
                     #evaluate expression
                     eval_result = self.evaluateExpression(errors,all_variables,temp_expression)
                     temp_expression =[]
+                    print(eval_result)
 
             elif token.type == VARIABLE_ASSIGNMENT:
                 # check if "IN"
                 # should be assignment (store) and expression before
                 if isAssignment == 1 and isDeclaration == 0:
+
                     expression_end = token_count
                     hasIn = 1
                     expressions.append(temp_expression)
                     #evaluate expression
                     eval_result = self.evaluateExpression(errors,all_variables,temp_expression)
                     temp_expression =[]
+                    print(eval_result)
+            
+            elif token.type == PROGRAM_CREATE:
+                isCreate = 1
+            
+            elif token.type == PROGRAM_RUPTURE:
+                isRupture = 1
 
             elif token.type == OUTPUT and token_count == 0:
                 # print value of following variable
@@ -390,27 +414,35 @@ class InterpolBody(object):
                         if var[1] == token.value and var[2] == -1:
                             all_variables[count][2] = eval_result
                         count += 1
-                            
+                    
                 temp_expression.append(token)
             
             elif isPrint == 1 and isDeclaration == 0 and isAssignment == 0 and token.type != DECLARATION_ASSIGNMENT and token.type != VARIABLE_ASSIGNMENT:
                 #should read in an expression
                 if self.checkAllVariables(token,all_variables) == False and self.retrieveFromVariables(token,all_variables) == token.value:
-                    errors+=1
+                    print(token)    
+                    #errors+=1
 
                 temp_expression.append(token)
             else:
                 errors += 1
 
             token_count += 1
-        expressions.append(temp_expression)
-        eval_result = self.evaluateExpression(errors,all_variables,temp_expression)
-
-        if isDeclaration == 1 and isPrint == 0 and isAssignment == 0 and token.type != DECLARATION_ASSIGNMENT and token.type != VARIABLE_ASSIGNMENT and hasWith == 1:
-            # works for code blocks with only 1 variable
-            all_variables[len(all_variables)-1][2] = eval_result
         
-        print(errors,token)
+        if token.type != PROGRAM_CREATE and token.type != PROGRAM_RUPTURE:
+            expressions.append(temp_expression)
+
+            eval_result = self.evaluateExpression(errors,all_variables,temp_expression)
+            print("eval",eval_result)
+
+            if eval_result != ERROR and isDeclaration == 1 and isPrint == 0 and isAssignment == 0 and token.type != DECLARATION_ASSIGNMENT and token.type != VARIABLE_ASSIGNMENT and hasWith == 1:
+                # works for code blocks with only 1 variable
+                all_variables[len(all_variables)-1][2] = eval_result
+
+            print("errors",errors,token,eval_result)
+        
+        if eval_result == ERROR:
+            errors += 1
 
         return errors
     
@@ -439,7 +471,7 @@ class InterpolBody(object):
         
         if variable_flag == 0:
             # if all succeeding elements are integers
-            return 0
+            return expression
                     
         else:
             # if there are any non-integer (variable)
@@ -447,18 +479,23 @@ class InterpolBody(object):
                 if self.checkAllVariables(elem[1].value,variables) == True:
                     expression[elem[0]].value = self.retrieveFromVariables(expression[elem[0]].value,variables)
 
+            return expression
+
 
     def evaluateExpression(self,errors,variables,expression):
         operations = ArithmeticOperations([])
         adv_operations = AdvancedArithmetic()
+
+        print("ineval",expression)
         
         while len(expression) > 3:
         
             count,start,end = 0,0,0
             
             for element in expression:
-                if element.type == OPERATION: # if operation is for 2 digit operation
+                if element.type == OPERATION and element.value != MEAN and element.value != DISTANCE: # if operation is for 2 digit operation
                     start,end = count,count+2
+
                     if expression[count+1].type == INTEGER and expression[count+2].type == INTEGER:
                         # if both integer
                         expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
@@ -476,13 +513,17 @@ class InterpolBody(object):
                         
                         if check == 1:
                             expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
-                
+
+
                 elif element.type == OPERATION and element.value == MEAN:
                     print("calculate for mean of all integer/variable/expression following")
                 
                 elif element.type == OPERATION and element.value == DISTANCE:
                     print("calculate for distance of all integer/variable/expression following")
-                    
+                
+                else:
+                    errors += 1
+
                 count += 1
             
             del expression[start+1:end+1]
@@ -507,15 +548,18 @@ class InterpolBody(object):
                 output = adv_operations.nthRoot(int(val1),int(val2))
             
             return output
+
         elif len(expression) == 1 and (expression[0].type == VARIABLE or expression[0].type == INTEGER or expression[0].type == STRING):
             # if variable
             if expression[0].type == STRING:
                 return expression[0].value[1:len(expression[0].value)-1]
             else:  
                 return expression[0].value
+       
         else:
             errors += 1
-            return errors
+            return ERROR
+        
 
 def main():
     block_end = False
@@ -539,11 +583,12 @@ def main():
     for statement in source_code:
         if statement == "CREATE" and block_start != True:
             # start reading in cobe block
+            code_block.append(statement)
             block_start = True
         elif statement == "RUPTURE" and block_start == True:
             if block_end != True: # first instance of rupture
                 block_end = True
-                #code_block.append(statement)
+                code_block.append(statement)
                 break
             elif block_start == True: # has existing rupture
                 errors += 1
