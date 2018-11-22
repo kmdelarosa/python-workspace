@@ -295,10 +295,8 @@ class InterpolBody(object):
             elif block_line[i] == VAR_ASSIGNMENT:
                 token_type = VARIABLE_ASSIGNMENT
 
-            elif block_line[i] == PLUS or block_line[i] == MINUS or block_line[i] == DIV or block_line[i] == MULT or block_line[i] == DIV or block_line[i] == MODU:
-                
+            elif block_line[i] == PLUS or block_line[i] == MINUS or block_line[i] == DIV or block_line[i] == MULT or block_line[i] == DIV or block_line[i] == MODU or block_line[i] == EXPO or block_line[i] == ROOT or block_line[i] == MEAN or block_line[i] == DISTANCE:
                 token_type = OPERATION
-                #self.syntax_status = True
 
             elif block_line[i].find("[") != -1 or block_line[i].find("]") != -1:
                 
@@ -467,8 +465,10 @@ class InterpolBody(object):
         if token.type != PROGRAM_CREATE and token.type != PROGRAM_RUPTURE and isDeclaration==1 and hasWith ==1:
             expressions.append(temp_expression)
 
+            print(temp_expression)
             eval_result = self.evaluateExpression(errors,all_variables,temp_expression)
-            
+            print(temp_expression)
+
             if eval_result != ERROR and (isDeclaration == 1 or isPrint == 1) and isAssignment == 0 and token.type != DECLARATION_ASSIGNMENT and token.type != VARIABLE_ASSIGNMENT and hasWith == 1:
                 # works for code blocks with only 1 variable
                 all_variables[len(all_variables)-1][2] = eval_result
@@ -521,42 +521,49 @@ class InterpolBody(object):
 
                 if element.type == OPERATION and element.value != MEAN and element.value != DISTANCE: # if operation is for 2 digit operation
                     start,end = count,count+2
-                    
+
                     if expression[count+1].type == INTEGER and expression[count+2].type == INTEGER:
                         # if both integer
                         expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
                     
                     elif (expression[count+1].type == VARIABLE and expression[count+2].type == INTEGER) or (expression[count+1].type == INTEGER and expression[count+2].type == VARIABLE) or (expression[count+1].type == VARIABLE and expression[count+2].type == VARIABLE):
+                        # if either one is a variable
                         expression[count+1] = self.checkExpression(expression[count+1],variables)
                         expression[count+2] = self.checkExpression(expression[count+2],variables)
+                        
                         expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
                 
-                #if element.type == OPERATION and element.value != MEAN and element.value != DISTANCE: # if operation is for 2 digit operation
-                #    start,end = count,count+2
-
-                #    if expression[count+1].type == INTEGER and expression[count+2].type == INTEGER:
-                        # if both integer
-                #        expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
-                    
-                #    elif (expression[count+1].type == VARIABLE and expression[count+2].type == INTEGER) or (expression[count+1].type == INTEGER and expression[count+2].type == VARIABLE) or (expression[count+1].type == VARIABLE and expression[count+2].type == VARIABLE):
-                #        check,index = -1,0
-
-                #        if self.checkAllVariables(expression[count+1],variables) == True:
-                #            check = 1
-                #            expression[count+1].value = self.retrieveFromVariables(expression[count+1],variables)
-                        
-                #        if self.checkAllVariables(expression[count+2],variables) == True:
-                #            check = 1
-                #            expression[count+2].value = self.retrieveFromVariables(expression[count+2],variables)
-                        
-                #        if check == 1:
-                #            expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
-
-
                 elif element.type == OPERATION and element.value == MEAN:
                     print("calculate for mean of all integer/variable/expression following")
-                    
-                
+
+                    start,end = count,len(expression)
+                    mn_values = []
+                    result,ctr = 0,start
+
+                    for elem in expression[start+1:end+1]:
+
+                        print("elem",elem)
+
+                        if elem.type == STRING:
+                            errors += 1
+                            break
+                        else:
+                            result = self.checkExpression(expression[ctr+1:ctr+2],variables) 
+            
+                            if result == PLUS or result == MINUS or result == MULT or result == DIV or result == MODU or result == EXPO or result == ROOT or result == MEAN or result == DISTANCE:
+                                tmp = str(self.evaluateExpression(errors,variables,expression[ctr+1:end+1]))
+
+                            elif result.isdigit() == True:
+                                tmp = result
+                            
+                            mn_values.append(int(tmp))
+                        ctr += 1
+
+                    print("mn",mn_values)
+
+                    expression[count].value = str(adv_operations.avg(mn_values))
+                    expression[count].type = INTEGER
+
                 elif element.type == OPERATION and element.value == DISTANCE:
                     print("calculate for distance of all integer/variable/expression following")
                     
@@ -570,7 +577,8 @@ class InterpolBody(object):
                 count += 1
             
             del expression[start+1:end+1]
-        
+            print(expression)
+
         if len(expression) == 3 and expression[0].type == OPERATION:
             output = -1
             operation,val1,val2 = expression[0].value,expression[1].value,expression[2].value
@@ -589,6 +597,8 @@ class InterpolBody(object):
                 output = adv_operations.exp(int(val1),int(val2))
             elif operation == ROOT:
                 output = adv_operations.nthRoot(int(val1),int(val2))
+            elif operation == MEAN:
+                ouput  = adv_operations.avg([int(val1),int(val2)])
             
             return output
 
