@@ -515,7 +515,7 @@ class InterpolBody(object):
         
         while len(expression) > 3:
         
-            count,start,end = 0,0,0
+            count = 0
             
             for element in expression:
 
@@ -525,7 +525,8 @@ class InterpolBody(object):
                     if expression[count+1].type == INTEGER and expression[count+2].type == INTEGER:
                         # if both integer
                         expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
-                    
+                        
+                   
                     elif (expression[count+1].type == VARIABLE and expression[count+2].type == INTEGER) or (expression[count+1].type == INTEGER and expression[count+2].type == VARIABLE) or (expression[count+1].type == VARIABLE and expression[count+2].type == VARIABLE):
                         # if either one is a variable
                         expression[count+1] = self.checkExpression(expression[count+1],variables)
@@ -533,48 +534,30 @@ class InterpolBody(object):
                         
                         expression[count].value = str(self.evaluateExpression(errors,variables,expression[count:count+3]))
 
+                    expression[count+1],expression[count+2] = Token('',''),Token('','')
+
                 elif element.type == OPERATION and element.value == MEAN:
-                    print("calculate for mean of all integer/variable/expression following")
+                    print("calculate for mean of all integer, only calculates mean for 2 digits", expression)
 
-                    start,end = count,len(expression)
-                    mn_values = []
-                    mn_values_index = []
-                    result,ctr = 0,start
-
-                    for elem in expression[start+1:end+1]:
-
-                        print("elem",elem)
-
-                        if elem.type == STRING:
-                            errors += 1
-                            break
-                        else:
-                            result = self.checkExpression(expression[ctr+1:ctr+2],variables) 
-            
-                            if result == PLUS or result == MINUS or result == MULT or result == DIV or result == MODU or result == EXPO or result == ROOT or result == MEAN or result == DISTANCE:
-                                tmp = str(self.evaluateExpression(errors,variables,expression[ctr+1:end+1]))
-                                #mn_values_index.append(ctr)
-                            elif result.isdigit() == True:
-                                tmp = result
-                            
-                            mn_values.append(tmp)
-                        ctr += 1
-
-                    print("mn",mn_values, expression)
+                    errors += 1
 
                 elif element.type == OPERATION and element.value == DISTANCE:
                     print("calculate for distance of all integer/variable/expression following")
                     
-                    #dst_values = []
-
-                    #for elem in expression[count+1:]
-                        #if()
+                    
                 else:
                     errors += 1
 
                 count += 1
             
-            del expression[start+1:end+1]
+            temp_exp = []
+
+            for tok in expression:
+                if tok.value != '' and tok.type != '':
+                    temp_exp.append(tok)
+            
+            expression = temp_exp
+
             print(expression)
 
         if len(expression) == 3 and expression[0].type == OPERATION:
