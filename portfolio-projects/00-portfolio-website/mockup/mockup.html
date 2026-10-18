@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio — Mockup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!-- ═══════════════════════════════════════════ NAV ═══ -->
+    <nav id="main-nav" style="display:none;">
+        <div class="nav-logo" onclick="showPage('landing', null); resetNav();" style="cursor:pointer;">
+            dev<span>.</span>portfolio</div>
+        <div class="nav-links" id="nav-python">
+            <a href="#" class="active" onclick="showPage('home', this)">Home</a>
+            <a href="#" onclick="showPage('about', this)">About</a>
+            <a href="#" onclick="showPage('projects', this)">Projects</a>
+            <a href="#" onclick="showPage('contact', this)">Contact</a>
+        </div>
+        <div class="nav-links" id="nav-tw" style="display:none;">
+            <a href="#" class="active" onclick="showPage('tw-home', this)">Home</a>
+            <a href="#" onclick="showPage('tw-work', this)">Work</a>
+            <a href="#" onclick="showPage('contact', this)">Contact</a>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════════ PAGE: LANDING CHOOSER ═══ -->
+    <div id="page-landing" class="page active landing-page">
+        <div class="landing-inner">
+            <p class="landing-label">Welcome</p>
+            <h1 class="landing-title">Choose a Portfolio</h1>
+            <p class="landing-sub">Two distinct bodies of work — pick the one you're here to explore.</p>
+            <div class="chooser-grid">
+                <!-- Python / Software card -->
+                <div class="chooser-card" onclick="enterPortfolio('python')">
+                    <div class="chooser-icon">🐍</div>
+                    <h2>Software Engineering</h2>
+                    <p>Python projects built alongside the Complete Python Bootcamp — CLI tools, automation scripts,
+                        REST APIs, and more.</p>
+                    <div class="chooser-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Flask</span>
+                        <span class="tag">CLI</span>
+                        <span class="tag">REST API</span>
+                    </div>
+                    <span class="chooser-cta">View Python Projects →</span>
+                </div>
+                <!-- Technical Writing / Design card -->
+                <div class="chooser-card" onclick="window.location='../../09-writing-and-design/index.html'">
+                    <div class="chooser-icon">✍️</div>
+                    <h2>Technical Writing<br>&amp; Visual Design</h2>
+                    <p>Documentation, UX writing, style guides, and visual design work — crafted for clarity and impact.
+                    </p>
+                    <div class="chooser-tags">
+                        <span class="tag">Docs</span>
+                        <span class="tag">UX Writing</span>
+                        <span class="tag">Design</span>
+                        <span class="tag">Style Guides</span>
+                    </div>
+                    <span class="chooser-cta">View Writing &amp; Design →</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ PAGE: HOME ═══ -->
+    <div id="page-home" class="page">
+        <section id="hero" style="position:relative;">
+            <div class="hero-content">
+                <p class="hero-greeting">👋 Hello, I'm</p>
+                <h1 class="hero-name">A Python<br><span>Developer</span><br>in Progress.</h1>
+                <p class="hero-desc">
+                    I'm building my skills through the Udemy Complete Python Bootcamp and applying everything I learn
+                    to real-world projects — from CLI tools to REST APIs.
+                </p>
+                <div class="hero-cta">
+                    <a href="#" class="btn btn-primary"
+                        onclick="showPage('projects', document.querySelector('#nav-python a:nth-child(3)'))">View
+                        Projects</a>
+                    <a href="#" class="btn btn-outline"
+                        onclick="showPage('contact', document.querySelector('#nav-python a:nth-child(4)'))">Get in
+                        Touch</a>
+                </div>
+            </div>
+            <div class="hero-scroll">
+                <span>scroll</span>
+                <div class="arrow"></div>
+            </div>
+        </section>
+
+        <!-- mini project preview strip on home -->
+        <div style="max-width:1100px; margin: 0 auto; padding: 0 40px 90px;">
+            <p class="section-label">Featured Projects</p>
+            <div
+                style="display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:16px; margin-top:20px;">
+                <div class="project-card" style="padding:20px;">
+                    <div class="card-num">01</div>
+                    <h3>CLI Expense Tracker</h3>
+                    <p>Log and summarize spending from the terminal. CSV-backed, filter by category or date.</p>
+                    <div class="tag-row"><span class="tag">csv</span><span class="tag">argparse</span></div>
+                </div>
+                <div class="project-card" style="padding:20px;">
+                    <div class="card-num">02</div>
+                    <h3>Password Generator</h3>
+                    <p>Cryptographically secure passwords with strength scoring and clipboard copy.</p>
+                    <div class="tag-row"><span class="tag">secrets</span><span class="tag">cli</span></div>
+                </div>
+                <div class="project-card" style="padding:20px;">
+                    <div class="card-num">08</div>
+                    <h3>Flask Notes API</h3>
+                    <p>RESTful CRUD API with SQLite persistence and API key auth. Deployable to Render.</p>
+                    <div class="tag-row"><span class="tag">Flask</span><span class="tag">SQLAlchemy</span></div>
+                </div>
+                <div class="project-card" style="padding:20px; cursor:pointer;"
+                    onclick="showPage('projects', document.querySelector('#nav-python a:nth-child(3)'))">
+                    <div
+                        style="display:flex; align-items:center; justify-content:center; height:100%; min-height:100px;">
+                        <span style="color:var(--accent); font-weight:700; font-size:0.9rem;">View all 8 projects
+                            →</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ PAGE: ABOUT ═══ -->
+    <div id="page-about" class="page">
+        <section>
+            <p class="section-label">About Me</p>
+            <h2 class="section-title">Who I Am</h2>
+            <p class="section-sub">A software developer learning Python through hands-on projects and structured study.
+            </p>
+
+            <div class="about-grid">
+                <div class="about-text">
+                    <p>
+                        I'm a developer working through the <strong>Complete Python Bootcamp</strong> on Udemy, building
+                        practical projects alongside each section of the course. My goal is to go from fundamentals to
+                        full-stack Python development.
+                    </p>
+                    <p>
+                        I'm particularly interested in <strong>automation, backend APIs, and data tools</strong> — the
+                        kind of software that quietly does useful work. Each project in this portfolio is a direct
+                        application of something I just learned.
+                    </p>
+                    <p>
+                        Outside of Python, I have experience with software development workflows, version control,
+                        and cloud infrastructure. I'm comfortable working with AWS and enjoy understanding how systems
+                        fit together end to end.
+                    </p>
+
+                    <div class="skills-grid">
+                        <div class="skill-pill"><span class="dot"></span>Python 3</div>
+                        <div class="skill-pill"><span class="dot"></span>Flask</div>
+                        <div class="skill-pill"><span class="dot"></span>Git / GitHub</div>
+                        <div class="skill-pill"><span class="dot"></span>REST APIs</div>
+                        <div class="skill-pill"><span class="dot"></span>SQL / SQLite</div>
+                        <div class="skill-pill"><span class="dot"></span>Web Scraping</div>
+                        <div class="skill-pill"><span class="dot"></span>File Automation</div>
+                        <div class="skill-pill"><span class="dot"></span>AWS (learning)</div>
+                    </div>
+                </div>
+
+                <div class="about-stats">
+                    <div class="stat-card">
+                        <div class="stat-num">8</div>
+                        <div class="stat-label">Python projects built</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">100+</div>
+                        <div class="stat-label">Hours of structured learning</div>
+                    </div>
+
+                    <ul class="journey-list">
+                        <li>
+                            <span class="j-icon">📘</span>
+                            <div>
+                                <div class="j-title">Udemy — Complete Python Bootcamp</div>
+                                <div class="j-label">In progress · Jose Portilla</div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="j-icon">🛠️</span>
+                            <div>
+                                <div class="j-title">Portfolio Projects</div>
+                                <div class="j-label">8 projects · CLI to REST API</div>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="j-icon">☁️</span>
+                            <div>
+                                <div class="j-title">AWS Cloud Infrastructure</div>
+                                <div class="j-label">Working knowledge · ECS, Lambda, S3</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ═══════════════════════════════ PAGE: PROJECTS ═══ -->
+    <div id="page-projects" class="page">
+        <section>
+            <p class="section-label">My Work</p>
+            <h2 class="section-title">Projects</h2>
+            <p class="section-sub">Each project was built alongside a section of the Python Bootcamp, applying new
+                skills to a real-world problem.</p>
+
+            <div class="projects-grid">
+
+                <!-- 01 -->
+                <div class="project-card">
+                    <div class="card-num">01</div>
+                    <h3>CLI Expense Tracker</h3>
+                    <p>A command-line app to log, categorize, and summarize personal expenses. Data persists between
+                        sessions in a CSV file, with filtering by category and date range.</p>
+                    <div class="tag-row">
+                        <span class="tag">csv</span><span class="tag">datetime</span><span class="tag">argparse</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal-01')">View Demo</button>
+                        <a href="https://github.com" class="btn btn-outline">GitHub</a>
+                    </div>
+                </div>
+
+                <!-- 02 -->
+                <div class="project-card">
+                    <div class="card-num">02</div>
+                    <h3>Password Generator</h3>
+                    <p>Generates cryptographically secure passwords using Python's <code
+                            style="color:var(--accent2)">secrets</code> module. Configurable length and character sets,
+                        with a built-in strength estimator.</p>
+                    <div class="tag-row">
+                        <span class="tag">secrets</span><span class="tag">string</span><span
+                            class="tag">pyperclip</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal-02')">View Demo</button>
+                        <a href="https://github.com" class="btn btn-outline">GitHub</a>
+                    </div>
+                </div>
+
+                <!-- 03 -->
+                <div class="project-card">
+                    <div class="card-num">03</div>
+                    <h3>Personal Finance Dashboard</h3>
+                    <p>OOP-based finance manager that tracks income and expenses, compares against monthly budgets, and
+                        generates reports. Built with a clean class architecture.</p>
+                    <div class="tag-row">
+                        <span class="tag">OOP</span><span class="tag">json</span><span
+                            class="tag">matplotlib</span><span class="tag">Flask</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal-03')">View Demo</button>
+                        <a href="https://github.com" class="btn btn-outline">GitHub</a>
+                    </div>
+                </div>
+
+                <!-- 04 -->
+                <div class="project-card">
+                    <div class="card-num">04</div>
+                    <h3>Web Scraper — Job Listings</h3>
+                    <p>Scrapes job listings from a public site and exports structured data to CSV or JSON. Includes
+                        keyword filtering, deduplication across runs, and polite rate limiting.</p>
+                    <div class="tag-row">
+                        <span class="tag">requests</span><span class="tag">BeautifulSoup4</span><span
+                            class="tag">csv</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal-04')">View Demo</button>
+                        <a href="https://github.com" class="btn btn-outline">GitHub</a>
+                    </div>
+                </div>
+
+                <!-- 05 -->
+                <div class="project-card">
+                    <div class="card-num">05</div>
+                    <h3>Automated File Organizer</h3>
+                    <p>Sorts a target directory by file type and date into structured subfolders. Configurable
+                        extension-to-folder rules, dry-run preview mode, and full operation logging.</p>
+                    <div class="tag-row">
+                        <span class="tag">pathlib</span><span class="tag">shutil</span><span class="tag">logging</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal-05')">View Demo</button>
+                        <a href="https://github.com" class="btn btn-outline">GitHub</a>
+                    </div>
+                </div>
+
+                <!-- 06 -->
+                <div class="project-card">
+                    <div class="card-num">06</div>
+                    <h3>PDF Report Generator</h3>
+                    <p>Reads structured CSV data and generates a formatted PDF report with summary tables, category
+                        breakdowns, and a bar chart. Clean CLI interface with graceful error handling.</p>
+                    <div class="tag-row">
+                        <span class="tag">fpdf2</span><span class="tag">matplotlib</span><span
+                            class="tag">argparse</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal-06')">View Demo</button>
+                        <a href="https://github.com" class="btn btn-outline">GitHub</a>
+                    </div>
+                </div>
+
+                <!-- 07 -->
+                <div class="project-card">
+                    <div class="card-num">07</div>
+                    <h3>Email Automation Tool</h3>
+                    <p>Mail-merge tool that sends personalized HTML emails from a CSV contact list and a Jinja2
+                        template. Dry-run mode, per-contact send logging, and SMTP via environment variables.</p>
+                    <div class="tag-row">
+                        <span class="tag">smtplib</span><span class="tag">jinja2</span><span class="tag">dotenv</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal-07')">View Demo</button>
+                        <a href="https://github.com" class="btn btn-outline">GitHub</a>
+                    </div>
+                </div>
+
+                <!-- 08 -->
+                <div class="project-card">
+                    <div class="card-num">08</div>
+                    <h3>Flask REST API — Notes App</h3>
+                    <p>RESTful API with full CRUD, SQLite persistence via SQLAlchemy, API key authentication, and
+                        structured JSON error responses. Deployable to Render or Railway.</p>
+                    <div class="tag-row">
+                        <span class="tag">Flask</span><span class="tag">SQLAlchemy</span><span class="tag">REST</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal-08')">View Demo</button>
+                        <a href="https://github.com" class="btn btn-outline">GitHub</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <!-- ═══════════════════════════════ PAGE: TW HOME ═══ -->
+    <div id="page-tw-home" class="page">
+        <section id="tw-hero" style="position:relative;">
+            <div class="hero-content">
+                <p class="hero-greeting">✍️ Hello, I'm</p>
+                <h1 class="hero-name">A Technical<br><span>Writer</span><br>&amp; Visual Designer.</h1>
+                <p class="hero-desc">
+                    I craft documentation, UX copy, and visual assets that make complex things feel simple. Clarity,
+                    structure, and good design go hand in hand.
+                </p>
+                <div class="hero-cta">
+                    <a href="#" class="btn btn-primary"
+                        onclick="showPage('tw-work', document.querySelector('#nav-tw a:nth-child(2)'))">View Work</a>
+                    <a href="#" class="btn btn-outline"
+                        onclick="showPage('contact', document.querySelector('#nav-tw a:nth-child(3)'))">Get in Touch</a>
+                </div>
+            </div>
+            <div class="hero-scroll">
+                <span>scroll</span>
+                <div class="arrow"></div>
+            </div>
+        </section>
+
+        <div style="max-width:1100px; margin: 0 auto; padding: 0 40px 90px;">
+            <p class="section-label">Featured Work</p>
+            <div
+                style="display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:16px; margin-top:20px;">
+                <div class="project-card" style="padding:20px;">
+                    <div class="card-num" style="color:var(--tw-accent);">01</div>
+                    <h3>API Documentation Suite</h3>
+                    <p>End-to-end developer docs for a REST API — reference, quickstart, and error guide.</p>
+                    <div class="tag-row"><span class="tag tw-tag">Docs</span><span class="tag tw-tag">OpenAPI</span>
+                    </div>
+                </div>
+                <div class="project-card" style="padding:20px;">
+                    <div class="card-num" style="color:var(--tw-accent);">02</div>
+                    <h3>UX Writing System</h3>
+                    <p>Microcopy guidelines and UI string library for a SaaS product's design system.</p>
+                    <div class="tag-row"><span class="tag tw-tag">UX Writing</span><span class="tag tw-tag">Style
+                            Guide</span></div>
+                </div>
+                <div class="project-card" style="padding:20px;">
+                    <div class="card-num" style="color:var(--tw-accent);">03</div>
+                    <h3>Brand Identity Package</h3>
+                    <p>Logo, color system, typography, and usage guidelines for a tech startup.</p>
+                    <div class="tag-row"><span class="tag tw-tag">Branding</span><span class="tag tw-tag">Visual
+                            Design</span></div>
+                </div>
+                <div class="project-card" style="padding:20px; cursor:pointer;"
+                    onclick="showPage('tw-work', document.querySelector('#nav-tw a:nth-child(2)'))">
+                    <div
+                        style="display:flex; align-items:center; justify-content:center; height:100%; min-height:100px;">
+                        <span style="color:var(--tw-accent); font-weight:700; font-size:0.9rem;">View all work →</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════ PAGE: TW WORK ═══ -->
+    <div id="page-tw-work" class="page">
+        <section>
+            <p class="section-label" style="color:var(--tw-accent);">My Work</p>
+            <h2 class="section-title">Writing &amp; Design</h2>
+            <p class="section-sub">A selection of technical writing, UX copy, and visual design projects.</p>
+
+            <div class="projects-grid">
+
+                <!-- TW 01 -->
+                <div class="project-card tw-card">
+                    <div class="card-num" style="color:var(--tw-accent);">01</div>
+                    <h3>API Documentation Suite</h3>
+                    <p>Comprehensive developer documentation for a REST API — including a quickstart guide, full
+                        endpoint reference, authentication walkthrough, and structured error code catalogue.</p>
+                    <div class="tag-row">
+                        <span class="tag tw-tag">Technical Docs</span><span class="tag tw-tag">OpenAPI</span><span
+                            class="tag tw-tag">Markdown</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-tw-primary">View Sample</button>
+                        <a href="https://github.com" class="btn btn-tw-outline">GitHub</a>
+                    </div>
+                </div>
+
+                <!-- TW 02 -->
+                <div class="project-card tw-card">
+                    <div class="card-num" style="color:var(--tw-accent);">02</div>
+                    <h3>UX Writing System</h3>
+                    <p>Microcopy guidelines covering onboarding flows, error messages, empty states, and tooltips.
+                        Delivered as a living Notion-based style guide integrated into the design system.</p>
+                    <div class="tag-row">
+                        <span class="tag tw-tag">UX Writing</span><span class="tag tw-tag">Content Design</span><span
+                            class="tag tw-tag">Style Guide</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-tw-primary">View Sample</button>
+                        <a href="https://github.com" class="btn btn-tw-outline">Portfolio</a>
+                    </div>
+                </div>
+
+                <!-- TW 03 -->
+                <div class="project-card tw-card">
+                    <div class="card-num" style="color:var(--tw-accent);">03</div>
+                    <h3>Brand Identity Package</h3>
+                    <p>Full visual identity for a tech startup — wordmark, icon, color palette, type system, and a brand
+                        usage guide covering digital and print applications.</p>
+                    <div class="tag-row">
+                        <span class="tag tw-tag">Branding</span><span class="tag tw-tag">Visual Design</span><span
+                            class="tag tw-tag">Figma</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-tw-primary">View Sample</button>
+                        <a href="https://github.com" class="btn btn-tw-outline">Figma</a>
+                    </div>
+                </div>
+
+                <!-- TW 04 -->
+                <div class="project-card tw-card">
+                    <div class="card-num" style="color:var(--tw-accent);">04</div>
+                    <h3>Internal Knowledge Base</h3>
+                    <p>Structured a fragmented internal wiki into a searchable knowledge base with clear taxonomy,
+                        consistent templates, and a contribution guide for the engineering team.</p>
+                    <div class="tag-row">
+                        <span class="tag tw-tag">Information Architecture</span><span class="tag tw-tag">Docs</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-tw-primary">View Sample</button>
+                        <a href="https://github.com" class="btn btn-tw-outline">Notion</a>
+                    </div>
+                </div>
+
+                <!-- TW 05 -->
+                <div class="project-card tw-card">
+                    <div class="card-num" style="color:var(--tw-accent);">05</div>
+                    <h3>Product UI Redesign</h3>
+                    <p>High-fidelity Figma mockups for a dashboard redesign — from initial wireframes through a polished
+                        component library with light and dark mode variants.</p>
+                    <div class="tag-row">
+                        <span class="tag tw-tag">UI Design</span><span class="tag tw-tag">Figma</span><span
+                            class="tag tw-tag">Design System</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-tw-primary">View Sample</button>
+                        <a href="https://github.com" class="btn btn-tw-outline">Figma</a>
+                    </div>
+                </div>
+
+                <!-- TW 06 -->
+                <div class="project-card tw-card">
+                    <div class="card-num" style="color:var(--tw-accent);">06</div>
+                    <h3>Technical Blog Series</h3>
+                    <p>Six-part series explaining cloud infrastructure concepts for a developer audience — balancing
+                        technical accuracy with approachable prose and clear diagrams.</p>
+                    <div class="tag-row">
+                        <span class="tag tw-tag">Technical Writing</span><span class="tag tw-tag">Blogging</span><span
+                            class="tag tw-tag">AWS</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-tw-primary">View Sample</button>
+                        <a href="https://github.com" class="btn btn-tw-outline">Medium</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <!-- ═══════════════════════════════ PAGE: CONTACT ═══ -->
+    <div id="page-contact" class="page">
+        <section>
+            <p class="section-label">Say Hello</p>
+            <h2 class="section-title">Get in Touch</h2>
+            <p class="section-sub">Have a question, want to collaborate, or just want to connect? Drop me a message.</p>
+
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Let's connect</h3>
+                    <p>I'm always open to interesting conversations, project feedback, or opportunities to collaborate.
+                    </p>
+                    <div class="contact-links">
+                        <a href="https://github.com" class="contact-link">
+                            <span class="cl-icon">🐙</span>
+                            <div>
+                                <div style="font-size:0.75rem; color:var(--muted);">GitHub</div>
+                                <div>github.com/yourusername</div>
+                            </div>
+                        </a>
+                        <a href="https://linkedin.com" class="contact-link">
+                            <span class="cl-icon">💼</span>
+                            <div>
+                                <div style="font-size:0.75rem; color:var(--muted);">LinkedIn</div>
+                                <div>linkedin.com/in/yourname</div>
+                            </div>
+                        </a>
+                        <a href="mailto:you@example.com" class="contact-link">
+                            <span class="cl-icon">✉️</span>
+                            <div>
+                                <div style="font-size:0.75rem; color:var(--muted);">Email</div>
+                                <div>you@example.com</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <form class="contact-form" onsubmit="submitForm(event)">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" placeholder="Your name" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="your@email.com" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" placeholder="What's on your mind?" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="align-self:flex-start;">Send Message</button>
+                    <div class="form-success" id="form-success">
+                        ✓ Message sent! I'll get back to you soon.
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <!-- ═══════════════════════════════════ FOOTER ═══ -->
+    <footer>
+        <p>Built with Python &amp; plain HTML/CSS · <a href="https://github.com">GitHub</a></p>
+    </footer>
+
+    <!-- ═══════════════════════════════════ MODALS ═══ -->
+
+    <!-- Modal 01 — CLI Expense Tracker -->
+    <div class="modal-overlay" id="modal-01">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>01 · CLI Expense Tracker</h3>
+                <button class="modal-close" onclick="closeModal('modal-01')">✕</button>
+            </div>
+            <div class="modal-section">
+                <h4>Description</h4>
+                <p>A command-line app to log, categorize, and summarize personal expenses. Data persists in a CSV file
+                    between sessions, with filtering by category and date range.</p>
+            </div>
+            <div class="modal-section">
+                <h4>Tech Stack</h4>
+                <div class="tag-row"><span class="tag">Python 3</span><span class="tag">csv</span><span
+                        class="tag">datetime</span><span class="tag">argparse</span></div>
+            </div>
+            <div class="modal-section">
+                <h4>Terminal Demo</h4>
+                <div class="demo-window">
+                    <span class="prompt">$</span> python src/main.py<br><br>
+                    <span class="comment">--- Expense Tracker ---</span><br>
+                    1. Add expense<br>
+                    2. List expenses<br>
+                    3. Summary<br>
+                    4. Delete expense<br>
+                    5. Quit<br>
+                    Select option: <span class="output">3</span><br><br>
+                    <span class="comment">--- By Category ---</span><br>
+                    <span class="output">Food $ 146.54</span><br>
+                    <span class="output">Transport $ 45.00</span><br>
+                    <span class="output">Utilities $ 140.00</span><br><br>
+                    <span class="comment">--- By Month ---</span><br>
+                    <span class="output">2026-08 $ 331.54</span><br><br>
+                    Total: $331.54
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 02 — Password Generator -->
+    <div class="modal-overlay" id="modal-02">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>02 · Password Generator</h3>
+                <button class="modal-close" onclick="closeModal('modal-02')">✕</button>
+            </div>
+            <div class="modal-section">
+                <h4>Description</h4>
+                <p>Generates cryptographically secure passwords using Python's <code>secrets</code> module. Configurable
+                    length, character sets, and a built-in strength estimator.</p>
+            </div>
+            <div class="modal-section">
+                <h4>Tech Stack</h4>
+                <div class="tag-row"><span class="tag">Python 3</span><span class="tag">secrets</span><span
+                        class="tag">string</span><span class="tag">pyperclip</span></div>
+            </div>
+            <div class="modal-section">
+                <h4>Terminal Demo</h4>
+                <div class="demo-window">
+                    <span class="prompt">$</span> python src/main.py --length 20 --count 3<br><br>
+                    <span class="output">K#9mPqR!vX2@wLdN$cTz</span> [Strong]<br>
+                    <span class="output">j&amp;7Hn*Ys4^BfC1eW%oUa</span> [Strong]<br>
+                    <span class="output">Xp#3Dv@kM8!nQr$Zt5Lw</span> [Strong]<br><br>
+                    <span class="comment"># Copied to clipboard ✓</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 03 — Finance Dashboard -->
+    <div class="modal-overlay" id="modal-03">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>03 · Personal Finance Dashboard</h3>
+                <button class="modal-close" onclick="closeModal('modal-03')">✕</button>
+            </div>
+            <div class="modal-section">
+                <h4>Description</h4>
+                <p>OOP-based finance manager. Tracks income and expenses, compares spending against monthly budgets, and
+                    generates summary reports. Phase 2 adds a Flask web dashboard.</p>
+            </div>
+            <div class="modal-section">
+                <h4>Tech Stack</h4>
+                <div class="tag-row"><span class="tag">OOP</span><span class="tag">json</span><span
+                        class="tag">fpdf2</span><span class="tag">matplotlib</span><span class="tag">Flask</span></div>
+            </div>
+            <div class="modal-section">
+                <h4>Terminal Demo</h4>
+                <div class="demo-window">
+                    <span class="comment">--- Summary Report ---</span><br>
+                    Total Income: <span class="output">$ 3500.00</span><br>
+                    Total Expenses: <span class="output">$ 1420.75</span><br>
+                    Net: <span class="output">$ 2079.25</span><br><br>
+                    <span class="comment">--- Expenses by Category ---</span><br>
+                    Food <span class="output">$ 420.30</span> (budget: $500.00, remaining: $79.70)<br>
+                    Housing <span class="output">$ 800.00</span> (budget: $800.00, remaining: $0.00)<br>
+                    Transport <span class="output">$ 200.45</span> (budget: $250.00, remaining: $49.55)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 04 — Web Scraper -->
+    <div class="modal-overlay" id="modal-04">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>04 · Web Scraper — Job Listings</h3>
+                <button class="modal-close" onclick="closeModal('modal-04')">✕</button>
+            </div>
+            <div class="modal-section">
+                <h4>Description</h4>
+                <p>Scrapes job listings from a public site and exports structured data to CSV or JSON. Includes
+                    keyword/location filtering, deduplication, and polite rate limiting.</p>
+            </div>
+            <div class="modal-section">
+                <h4>Tech Stack</h4>
+                <div class="tag-row"><span class="tag">requests</span><span class="tag">BeautifulSoup4</span><span
+                        class="tag">csv</span><span class="tag">json</span></div>
+            </div>
+            <div class="modal-section">
+                <h4>Terminal Demo</h4>
+                <div class="demo-window">
+                    <span class="prompt">$</span> python src/main.py --keyword "python" --output csv<br><br>
+                    Scraping listings... keyword='python' location=''<br>
+                    <span class="output">Found 14 listings.</span><br>
+                    Deduplication: 3 already seen, skipping.<br>
+                    <span class="output">CSV saved: output/listings_20260831_141502.csv</span><br>
+                    Done. <span class="output">11 listings</span> saved.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 05 — File Organizer -->
+    <div class="modal-overlay" id="modal-05">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>05 · Automated File Organizer</h3>
+                <button class="modal-close" onclick="closeModal('modal-05')">✕</button>
+            </div>
+            <div class="modal-section">
+                <h4>Description</h4>
+                <p>Sorts a target directory by file type and date. Configurable extension rules, dry-run preview mode,
+                    conflict resolution for duplicates, and full operation logging.</p>
+            </div>
+            <div class="modal-section">
+                <h4>Tech Stack</h4>
+                <div class="tag-row"><span class="tag">pathlib</span><span class="tag">shutil</span><span
+                        class="tag">logging</span><span class="tag">watchdog</span></div>
+            </div>
+            <div class="modal-section">
+                <h4>Terminal Demo</h4>
+                <div class="demo-window">
+                    <span class="prompt">$</span> python src/main.py --target ~/Downloads --dry-run<br><br>
+                    <span class="comment">[DRY RUN]</span> report_q3.pdf → Documents/2026-08/<br>
+                    <span class="comment">[DRY RUN]</span> vacation.jpg → Images/2026-08/<br>
+                    <span class="comment">[DRY RUN]</span> backup.zip → Archives/2026-08/<br>
+                    <span class="comment">[DRY RUN]</span> notes.txt → Documents/2026-08/<br>
+                    <span class="comment">[DRY RUN]</span> budget.xlsx → Data/2026-08/<br><br>
+                    <span class="output">5 files would be moved. Run without --dry-run to apply.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 06 — PDF Report Generator -->
+    <div class="modal-overlay" id="modal-06">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>06 · PDF Report Generator</h3>
+                <button class="modal-close" onclick="closeModal('modal-06')">✕</button>
+            </div>
+            <div class="modal-section">
+                <h4>Description</h4>
+                <p>Reads structured CSV data and generates a formatted PDF with summary tables, category breakdowns, and
+                    a bar chart. Clean CLI interface with graceful handling of malformed data.</p>
+            </div>
+            <div class="modal-section">
+                <h4>Tech Stack</h4>
+                <div class="tag-row"><span class="tag">fpdf2</span><span class="tag">matplotlib</span><span
+                        class="tag">csv</span><span class="tag">argparse</span></div>
+            </div>
+            <div class="modal-section">
+                <h4>Terminal Demo</h4>
+                <div class="demo-window">
+                    <span class="prompt">$</span> python src/main.py --input sample_data/expenses.csv --output
+                    report.pdf<br><br>
+                    Reading data from sample_data/expenses.csv...<br>
+                    <span class="output">Loaded 10 rows.</span><br>
+                    Generating chart...<br>
+                    <span class="output">Chart saved to /tmp/report_chart.png</span><br>
+                    Building PDF...<br>
+                    <span class="output">Report saved to report.pdf ✓</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 07 — Email Automation -->
+    <div class="modal-overlay" id="modal-07">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>07 · Email Automation Tool</h3>
+                <button class="modal-close" onclick="closeModal('modal-07')">✕</button>
+            </div>
+            <div class="modal-section">
+                <h4>Description</h4>
+                <p>Mail-merge tool that sends personalized HTML emails from a CSV contact list and a Jinja2 template.
+                    Dry-run preview, per-contact logging, and SMTP config via environment variables.</p>
+            </div>
+            <div class="modal-section">
+                <h4>Tech Stack</h4>
+                <div class="tag-row"><span class="tag">smtplib</span><span class="tag">jinja2</span><span
+                        class="tag">python-dotenv</span><span class="tag">csv</span></div>
+            </div>
+            <div class="modal-section">
+                <h4>Terminal Demo</h4>
+                <div class="demo-window">
+                    <span class="prompt">$</span> python src/main.py --dry-run<br><br>
+                    Loaded <span class="output">2 contacts</span>.<br><br>
+                    <span class="comment">--- DRY RUN: jane@example.com ---</span><br>
+                    Subject: You're invited!<br>
+                    Hi Jane, You are invited to <span class="output">Python Meetup</span>.<br><br>
+                    <span class="comment">--- DRY RUN: john@example.com ---</span><br>
+                    Subject: You're invited!<br>
+                    Hi John, You are invited to <span class="output">Python Meetup</span>.<br><br>
+                    <span class="output">Dry run complete. 2 emails previewed.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 08 — Flask Notes API -->
+    <div class="modal-overlay" id="modal-08">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>08 · Flask REST API — Notes App</h3>
+                <button class="modal-close" onclick="closeModal('modal-08')">✕</button>
+            </div>
+            <div class="modal-section">
+                <h4>Description</h4>
+                <p>RESTful API with full CRUD, SQLite persistence via SQLAlchemy, and API key authentication. Returns
+                    structured JSON responses and proper HTTP status codes. Deployable to Render.</p>
+            </div>
+            <div class="modal-section">
+                <h4>Tech Stack</h4>
+                <div class="tag-row"><span class="tag">Flask</span><span class="tag">SQLAlchemy</span><span
+                        class="tag">SQLite</span><span class="tag">python-dotenv</span></div>
+            </div>
+            <div class="modal-section">
+                <h4>API Demo</h4>
+                <div class="demo-window">
+                    <span class="comment"># POST /notes</span><br>
+                    <span class="prompt">$</span> curl -X POST http://localhost:5000/notes \<br>
+                    -H "X-API-Key: your-api-key" \<br>
+                    -H "Content-Type: application/json" \<br>
+                    -d '{"title": "My first note", "content": "Hello, Flask!"}'<br><br>
+                    <span class="output">{
+                        "id": 1,
+                        "title": "My first note",
+                        "content": "Hello, Flask!",
+                        "created_at": "2026-08-31T14:22:00"
+                        }</span><br><br>
+                    <span class="comment"># GET /notes</span><br>
+                    <span class="prompt">$</span> curl http://localhost:5000/notes -H "X-API-Key: your-api-key"<br>
+                    <span class="output">[{"id": 1, "title": "My first note", ...}]</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ SCRIPT ═══ -->
+    <script>
+        let currentPortfolio = null;
+
+        function enterPortfolio(type) {
+            currentPortfolio = type;
+            document.getElementById('main-nav').style.display = 'flex';
+            document.getElementById('nav-python').style.display = type === 'python' ? 'flex' : 'none';
+            document.getElementById('nav-tw').style.display = type === 'tw' ? 'flex' : 'none';
+
+            if (type === 'python') {
+                showPage('home', document.querySelector('#nav-python a:first-child'));
+            } else {
+                showPage('tw-home', document.querySelector('#nav-tw a:first-child'));
+            }
+        }
+
+        function resetNav() {
+            currentPortfolio = null;
+            document.getElementById('main-nav').style.display = 'none';
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-landing').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function showPage(name, linkEl) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + name).classList.add('active');
+            // reset active on whichever nav set is visible
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            if (linkEl) linkEl.classList.add('active');
+            window.scrollTo(0, 0);
+            return false;
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) closeModal(overlay.id);
+            });
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.open').forEach(m => closeModal(m.id));
+            }
+        });
+
+        function submitForm(e) {
+            e.preventDefault();
+            document.getElementById('form-success').style.display = 'block';
+            e.target.reset();
+        }
+    </script>
+</body>
+
+</html>

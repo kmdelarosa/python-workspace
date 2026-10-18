@@ -1,0 +1,5 @@
+fpdf2==2.8.1
+matplotlib==3.9.2
+pytest==8.3.2
+# Phase 2
+flask==3.0.3

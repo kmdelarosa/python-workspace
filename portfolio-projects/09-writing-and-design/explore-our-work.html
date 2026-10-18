@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Explore Our Work — Technical Writer & Visual Content Designer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        /* ── Process steps ── */
+        .process-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin-bottom: 72px;
+        }
+
+        .process-step {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            padding: 28px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .process-step:first-child {
+            padding-top: 0;
+        }
+
+        .process-step:last-child {
+            border-bottom: none;
+        }
+
+        .step-num {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--accent);
+            text-transform: uppercase;
+            min-width: 28px;
+            padding-top: 4px;
+        }
+
+        .step-body h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .step-body p {
+            color: var(--muted);
+            font-size: 0.88rem;
+            line-height: 1.65;
+            max-width: 540px;
+        }
+
+        /* ── Work type section header ── */
+        .work-section-header {
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+            margin-bottom: 28px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .work-section-header h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .work-section-header .section-label {
+            margin-bottom: 0;
+        }
+
+        /* ── Work card grid ── */
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 20px;
+            margin-bottom: 72px;
+        }
+
+        .work-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: border-color .2s, transform .2s;
+        }
+
+        .work-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .work-card .card-num {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+        }
+
+        .work-card h4 {
+            font-size: 0.98rem;
+            font-weight: 700;
+        }
+
+        .work-card p {
+            color: var(--muted);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .work-card .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .work-card .btn {
+            padding: 7px 16px;
+            font-size: 0.8rem;
+        }
+
+        /* ── TW Category blocks ── */
+        .tw-category {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 32px;
+            margin-bottom: 20px;
+            transition: border-color .2s;
+        }
+
+        .tw-category:hover {
+            border-color: var(--accent);
+        }
+
+        .tw-cat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 24px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .tw-cat-meta {
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+        }
+
+        .tw-cat-num {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--accent);
+            opacity: 0.4;
+            line-height: 1;
+            min-width: 36px;
+            padding-top: 2px;
+        }
+
+        .tw-cat-meta h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 4px;
+        }
+
+        .tw-cat-sub {
+            font-size: 0.78rem;
+            color: var(--accent);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .tw-cat-summary {
+            color: var(--muted);
+            font-size: 0.88rem;
+            line-height: 1.7;
+            max-width: 760px;
+            margin-bottom: 24px;
+            padding-left: 54px;
+        }
+
+        /* ── PDF slot ── */
+        .pdf-slot {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(168, 85, 247, 0.06);
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-left: 54px;
+            transition: border-color .2s, background .2s;
+        }
+
+        .pdf-slot:has(.pdf-btn:hover) {
+            border-color: var(--accent);
+            background: rgba(168, 85, 247, 0.1);
+        }
+
+        .pdf-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .pdf-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+        }
+
+        .pdf-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .pdf-hint {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .pdf-btn {
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 640px) {
+            .tw-cat-header {
+                flex-direction: column;
+            }
+
+            .tw-cat-summary,
+            .pdf-slot {
+                margin-left: 0;
+                padding-left: 16px;
+            }
+        }
+
+        /* ── CTA strip ── */
+        .cta-strip {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 48px 40px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .cta-strip h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .cta-strip p {
+            color: var(--muted);
+            margin-bottom: 28px;
+            font-size: 0.95rem;
+        }
+
+        .cta-strip .hero-cta {
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-logo" onclick="window.location='index.html'">tw<span>.</span>portfolio</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="who-we-are.html">Who We Are</a>
+            <a href="explore-our-work.html" class="active">Our Work</a>
+        </div>
+    </nav>
+
+    <section style="padding-top: 120px;">
+        <p class="section-label">Explore Our Work</p>
+        <h2 class="section-title">How I work &amp; what I make</h2>
+        <p class="section-sub">
+            I engage with product understanding first, then audience positioning — translating business value
+            into content that's accessible, accurate, and built to be used.
+        </p>
+
+        <!-- ── How I Work ── -->
+        <p class="section-label" style="margin-bottom: 20px;">How I work</p>
+        <div class="process-steps">
+            <div class="process-step">
+                <span class="step-num">01</span>
+                <div class="step-body">
+                    <h3>Product understanding</h3>
+                    <p>I start by getting deep into the product — how it works, what it does, and what makes it
+                        technically distinct. No good content comes from a surface-level read of a one-pager.</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <span class="step-num">02</span>
+                <div class="step-body">
+                    <h3>Target audience positioning</h3>
+                    <p>Who needs this content? What do they already know, and where do they get stuck? I map that
+                        gap and build everything around closing it — whether the audience is a developer or a CFO.</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <span class="step-num">03</span>
+                <div class="step-body">
+                    <h3>Translating business value into accessible content</h3>
+                    <p>I bridge the gap between what a product <em>can</em> do and what users need to
+                        <em>understand</em>
+                        — crafting written and visual assets that make complex things feel clear and worth trusting.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Technical Writing ── -->
+        <div id="technical-writing" class="work-section-header">
+            <p class="section-label">01</p>
+            <h3>Technical Writing</h3>
+        </div>
+
+        <!-- Category 1 -->
+        <div class="tw-category">
+            <div class="tw-cat-header">
+                <div class="tw-cat-meta">
+                    <span class="tw-cat-num">01</span>
+                    <div>
+                        <h4>Software User Guides &amp; Technical Documentation</h4>
+                        <span class="tw-cat-sub">Low-Code / No-Code Platform</span>
+                    </div>
+                </div>
+                <div class="tw-cat-tags">
+                    <span class="tag">User Guides</span>
+                    <span class="tag">API Workflows</span>
+                    <span class="tag">Architecture</span>
+                    <span class="tag">Docs Frameworks</span>
+                </div>
+            </div>
+            <p class="tw-cat-summary">
+                Actionable end-user guides, API-level developer workflows, architecture troubleshooting, and structural
+                documentation frameworks designed to accelerate platform adoption and system alignment.
+            </p>
+            <div class="pdf-slot">
+                <span class="pdf-icon">📄</span>
+                <div class="pdf-info">
+                    <span class="pdf-label">PDF Sample</span>
+                    <span class="pdf-hint">Replace the href below with your file path or URL</span>
+                </div>
+                <a href="#" class="btn btn-primary pdf-btn">View Sample PDF</a>
+            </div>
+        </div>
+
+        <!-- Category 2 -->
+        <div class="tw-category">
+            <div class="tw-cat-header">
+                <div class="tw-cat-meta">
+                    <span class="tw-cat-num">02</span>
+                    <div>
+                        <h4>Digital Content Tools, Editorial Standards &amp; Educational Analyses</h4>
+                        <span class="tw-cat-sub">Editorial Playbooks &amp; Academic Frameworks</span>
+                    </div>
+                </div>
+                <div class="tw-cat-tags">
+                    <span class="tag">Editorial Standards</span>
+                    <span class="tag">Sentiment Analysis</span>
+                    <span class="tag">Assessment Criteria</span>
+                    <span class="tag">Content Quality</span>
+                </div>
+            </div>
+            <p class="tw-cat-summary">
+                Comprehensive editorial playbooks, academic frameworks, and technical software deep-dives focused on
+                elevating content quality, sentiment analysis, and standardized assessment criteria.
+            </p>
+            <div class="pdf-slot">
+                <span class="pdf-icon">📄</span>
+                <div class="pdf-info">
+                    <span class="pdf-label">PDF Sample</span>
+                    <span class="pdf-hint">Replace the href below with your file path or URL</span>
+                </div>
+                <a href="#" class="btn btn-primary pdf-btn">View Sample PDF</a>
+            </div>
+        </div>
+
+        <!-- Category 3 -->
+        <div class="tw-category" style="margin-bottom: 72px;">
+            <div class="tw-cat-header">
+                <div class="tw-cat-meta">
+                    <span class="tw-cat-num">03</span>
+                    <div>
+                        <h4>Enterprise Software Frameworks, Digital Trends &amp; Strategic Sourcing</h4>
+                        <span class="tw-cat-sub">White Papers &amp; Strategic Playbooks</span>
+                    </div>
+                </div>
+                <div class="tw-cat-tags">
+                    <span class="tag">White Papers</span>
+                    <span class="tag">Enterprise Software</span>
+                    <span class="tag">AI Trends</span>
+                    <span class="tag">Strategic Sourcing</span>
+                </div>
+            </div>
+            <p class="tw-cat-summary">
+                Strategic market appraisals, technical recruitment playbooks, and forward-looking industry white papers
+                analyzing enterprise software architectures, emerging AI trends, and global sourcing strategies.
+            </p>
+            <div class="pdf-slot">
+                <span class="pdf-icon">📄</span>
+                <div class="pdf-info">
+                    <span class="pdf-label">PDF Sample</span>
+                    <span class="pdf-hint">Replace the href below with your file path or URL</span>
+                </div>
+                <a href="#" class="btn btn-primary pdf-btn">View Sample PDF</a>
+            </div>
+        </div>
+
+        <!-- ── Visual Content ── -->
+        <div id="visual-content" class="work-section-header">
+            <p class="section-label">02</p>
+            <h3>Visual Content Design</h3>
+        </div>
+
+        <div class="work-grid">
+            <div class="work-card">
+                <div class="card-num">VC — 01</div>
+                <h4>Product Explainer Infographic</h4>
+                <p>A single-page visual that maps a SaaS platform's core workflow — built for sales decks and
+                    landing pages. Designed to be understood in under 30 seconds.</p>
+                <div class="tag-row">
+                    <span class="tag">Infographic</span>
+                    <span class="tag">Visual Design</span>
+                </div>
+                <div class="card-actions">
+                    <a href="#" class="btn btn-primary">View Sample</a>
+                </div>
+            </div>
+
+            <div class="work-card">
+                <div class="card-num">VC — 02</div>
+                <h4>Campaign Pubmats</h4>
+                <p>A suite of print and digital publication materials for a product launch — social cards,
+                    event banners, and email headers, all consistent with the brand system.</p>
+                <div class="tag-row">
+                    <span class="tag">Pubmats</span>
+                    <span class="tag">Branding</span>
+                    <span class="tag">Print &amp; Digital</span>
+                </div>
+                <div class="card-actions">
+                    <a href="#" class="btn btn-primary">View Sample</a>
+                </div>
+            </div>
+
+            <div class="work-card">
+                <div class="card-num">VC — 03</div>
+                <h4>Voiceover Scripts</h4>
+                <p>VO scripts for a product demo video series — written to sound natural when spoken while
+                    staying technically precise and on-brand throughout.</p>
+                <div class="tag-row">
+                    <span class="tag">VO Script</span>
+                    <span class="tag">Video Production</span>
+                </div>
+                <div class="card-actions">
+                    <a href="#" class="btn btn-primary">View Sample</a>
+                </div>
+            </div>
+
+            <div class="work-card">
+                <div class="card-num">VC — 04</div>
+                <h4>Brand Identity Package</h4>
+                <p>Full visual identity for a tech startup — wordmark, icon, color palette, type system, and
+                    a brand usage guide covering digital and print applications.</p>
+                <div class="tag-row">
+                    <span class="tag">Branding</span>
+                    <span class="tag">Visual Design</span>
+                    <span class="tag">Figma</span>
+                </div>
+                <div class="card-actions">
+                    <a href="#" class="btn btn-primary">View Sample</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── CTA ── -->
+        <div class="cta-strip">
+            <h3>Have a project in mind?</h3>
+            <p>I work directly with organizations to bridge the gap between their complex technology and their end
+                users.</p>
+            <div class="hero-cta">
+                <a href="who-we-are.html" class="btn btn-outline">Know Who We Are</a>
+                <a href="mailto:you@example.com" class="btn btn-primary">Get in Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Technical Writer &amp; Visual Content Designer · <a href="index.html">Home</a> · <a
+                href="who-we-are.html">Who We Are</a></p>
+    </footer>
+
+</body>
+
+</html>

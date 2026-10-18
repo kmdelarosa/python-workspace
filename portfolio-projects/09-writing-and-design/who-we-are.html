@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Who We Are — Technical Writer & Visual Content Designer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .bio-block {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 40px;
+        }
+
+        .bio-block p {
+            color: var(--muted);
+            margin-bottom: 18px;
+            font-size: 0.95rem;
+            line-height: 1.75;
+        }
+
+        .bio-block p:last-child {
+            margin-bottom: 0;
+        }
+
+        .bio-block strong {
+            color: var(--text);
+        }
+
+        .exp-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 0;
+        }
+
+        .exp-list li {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+        }
+
+        .exp-icon {
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .exp-title {
+            font-size: 0.92rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .exp-label {
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-logo" onclick="window.location='index.html'">tw<span>.</span>portfolio</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="who-we-are.html" class="active">Who We Are</a>
+            <a href="explore-our-work.html">Our Work</a>
+        </div>
+    </nav>
+
+    <section style="padding-top: 120px;">
+        <p class="section-label">Who We Are</p>
+        <h2 class="section-title">A little about me</h2>
+        <p class="section-sub">
+            Someone who genuinely likes understanding hard things — and making them easier for everyone else.
+        </p>
+
+        <div class="two-col">
+
+            <!-- Left: bio -->
+            <div>
+                <div class="bio-block">
+                    <p>
+                        I collaborate with companies to <strong>understand their products deeply</strong> — then
+                        translate
+                        that understanding into documentation and visual content that actually works for the people who
+                        need to use them.
+                    </p>
+                    <p>
+                        My process starts with the product and the audience. I ask what users need to know, what they're
+                        likely confused about, and what would make them confident. Then I build content around those
+                        answers —
+                        whether that's a structured API reference, an onboarding guide, or a visual explainer.
+                    </p>
+                    <p>
+                        I work across <strong>technical writing and visual design</strong> because the two reinforce
+                        each other.
+                        A well-structured doc becomes more powerful with the right diagram. A visual asset lands harder
+                        when
+                        the copy behind it is precise.
+                    </p>
+                </div>
+
+                <div style="margin-top: 32px;">
+                    <a href="index.html#contact" class="btn btn-primary">Contact Me</a>
+                </div>
+            </div>
+
+            <!-- Right: experience -->
+            <div>
+                <p class="section-label" style="margin-bottom: 18px;">Experience</p>
+                <ul class="exp-list">
+                    <li>
+                        <span class="exp-icon">📝</span>
+                        <div>
+                            <div class="exp-title">Technical Writing</div>
+                            <div class="exp-label">API docs, user guides, release notes, style guides</div>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="exp-icon">🎨</span>
+                        <div>
+                            <div class="exp-title">Visual Content Design</div>
+                            <div class="exp-label">Infographics, pubmats, VO scripts, brand assets</div>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="exp-icon">🤝</span>
+                        <div>
+                            <div class="exp-title">Client Collaboration</div>
+                            <div class="exp-label">Working directly with product, engineering, and marketing teams</div>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="exp-icon">🎯</span>
+                        <div>
+                            <div class="exp-title">Audience Positioning</div>
+                            <div class="exp-label">Translating business value into user-focused content</div>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="exp-icon">☁️</span>
+                        <div>
+                            <div class="exp-title">Tech Domain Knowledge</div>
+                            <div class="exp-label">SaaS, cloud infrastructure, developer tools, APIs</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <p>Technical Writer &amp; Visual Content Designer · <a href="index.html">Home</a> · <a
+                href="explore-our-work.html">Our Work</a></p>
+    </footer>
+
+</body>
+
+</html>
